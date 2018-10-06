@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Super Exchange</string>
+    <string name="today_rate_menu_item">Today\'s rate</string>
+    <string name="history_rate_menu_item">Last 7 days history</string>
+    <string name="navigation_drawer_open">open</string>
+    <string name="navigation_drawer_close">close</string>
+</resources>
