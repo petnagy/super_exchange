@@ -7,6 +7,7 @@ import android.support.v4.view.GravityCompat
 import android.support.v7.app.ActionBarDrawerToggle
 import android.view.MenuItem
 import com.petnagy.superexchange.R
+import com.petnagy.superexchange.pages.fragments.currentrate.CurrentRateFragment
 import dagger.android.support.DaggerAppCompatActivity
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -60,9 +61,9 @@ class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemS
     private fun initFragment() {
         var fragment = supportFragmentManager.findFragmentByTag(CONTENT_TAG)
         if (fragment == null) {
-            //fragment = XYFragment.newInstance()
+            fragment = CurrentRateFragment.newInstance()
         }
-        //replaceContent(fragment)
+        replaceContent(fragment)
     }
 
     private fun replaceContent(fragment: Fragment) {

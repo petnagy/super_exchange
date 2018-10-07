@@ -4,4 +4,7 @@
     <string name="history_rate_menu_item">Last 7 days history</string>
     <string name="navigation_drawer_open">open</string>
     <string name="navigation_drawer_close">close</string>
+    <string name="current_rate_base_currency_label">Base currency:</string>
+    <string name="current_rate_amount_label">Amount:</string>
+    <string name="current_rate_calc_button_label">Calculate</string>
 </resources>
