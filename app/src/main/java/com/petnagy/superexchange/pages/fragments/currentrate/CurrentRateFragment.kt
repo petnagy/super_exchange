@@ -20,11 +20,16 @@ class CurrentRateFragment: DaggerFragment() {
 
     private lateinit var viewModel: CurrentRateViewModel
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        viewModel = ViewModelProviders.of(this)[CurrentRateViewModel::class.java]
+        lifecycle.addObserver(viewModel)
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         Timber.d("CurrentRateFragment's view created")
         val binding: CurrentRateFragmentBinding = DataBindingUtil.inflate(inflater, R.layout.current_rate_fragment, container, false)
         val view = binding.root
-        viewModel = ViewModelProviders.of(this)[CurrentRateViewModel::class.java]
         binding.viewModel = viewModel
         binding.setLifecycleOwner(this)
         return view
