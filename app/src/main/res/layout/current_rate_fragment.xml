@@ -54,7 +54,8 @@
             app:layout_constraintEnd_toEndOf="@+id/progress"
             app:layout_constraintStart_toEndOf="@+id/current_rate_label"
             app:layout_constraintTop_toTopOf="parent"
-            bind:data="@{viewModel.currenciesList}" />
+            bind:data="@{viewModel.currenciesList}"
+            bind:selectedValue="@{viewModel.baseCurrency}"/>
 
         <TextView
             android:id="@+id/amount_label"

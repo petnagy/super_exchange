@@ -8,9 +8,9 @@ import dagger.android.ContributesAndroidInjector
  * Fragment level injection.
  */
 @Module
-interface DaggerFragmentModule {
+abstract class DaggerFragmentModule {
 
     @ContributesAndroidInjector(modules = [(CurrentRateFragmentModule::class)])
-    fun contributeCurrentRateFragment(): CurrentRateFragment
+    internal abstract fun contributeCurrentRateFragment(): CurrentRateFragment
 
 }

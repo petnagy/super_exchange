@@ -10,19 +10,24 @@ import android.view.ViewGroup
 import com.petnagy.superexchange.R
 import com.petnagy.superexchange.databinding.CurrentRateFragmentBinding
 import com.petnagy.superexchange.pages.fragments.currentrate.viewmodel.CurrentRateViewModel
+import com.petnagy.superexchange.pages.fragments.currentrate.viewmodel.CurrentRateViewModelFactory
 import dagger.android.support.DaggerFragment
 import timber.log.Timber
+import javax.inject.Inject
 
 /***
  * Current Rate's Fragment.
  */
 class CurrentRateFragment: DaggerFragment() {
 
+    @Inject
+    lateinit var viewModelFactory: CurrentRateViewModelFactory
+
     private lateinit var viewModel: CurrentRateViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModel = ViewModelProviders.of(this)[CurrentRateViewModel::class.java]
+        viewModel = ViewModelProviders.of(this, viewModelFactory)[CurrentRateViewModel::class.java]
         lifecycle.addObserver(viewModel)
     }
 

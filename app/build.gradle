@@ -38,6 +38,7 @@ ext {
     rxVersion = '2.1.10'
     rxAndroidVersion = '2.0.2'
     liveDataVersion = '1.1.1'
+    playlocationVersion = '16.0.0'
 }
 
 dependencies {
@@ -72,9 +73,13 @@ dependencies {
     implementation "io.reactivex.rxjava2:rxandroid:$rxAndroidVersion"
     implementation "io.reactivex.rxjava2:rxjava:$rxVersion"
 
+    //Live data
     implementation "android.arch.lifecycle:extensions:$liveDataVersion"
     implementation "android.arch.lifecycle:runtime:$liveDataVersion"
     kapt "android.arch.lifecycle:compiler:$liveDataVersion"
+
+    //location
+    implementation "com.google.android.gms:play-services-location:$playlocationVersion"
 
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
