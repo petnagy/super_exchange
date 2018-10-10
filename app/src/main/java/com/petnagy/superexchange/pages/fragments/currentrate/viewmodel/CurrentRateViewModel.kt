@@ -2,7 +2,9 @@ package com.petnagy.superexchange.pages.fragments.currentrate.viewmodel
 
 import android.arch.lifecycle.*
 import com.petnagy.superexchange.data.Currencies
+import com.petnagy.superexchange.extensions.default
 import com.petnagy.superexchange.pages.fragments.currentrate.model.CurrentRateModel
+import com.petnagy.superexchange.permission.PermissionStatus
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
@@ -11,17 +13,18 @@ import timber.log.Timber
 /***
  * Current Rate related ViewModel.
  */
-class CurrentRateViewModel(private val model: CurrentRateModel): ViewModel(), LifecycleObserver {
+class CurrentRateViewModel(private val model: CurrentRateModel) : ViewModel(), LifecycleObserver {
 
     val loading = MutableLiveData<Boolean>()
     val baseCurrency = MutableLiveData<String>()
     val currenciesList = Currencies.values().map { currency -> currency.name }.toList()
-    lateinit var countryDisposable: Disposable
+    private lateinit var countryDisposable: Disposable
+    val fineLocationPermissionStatus: MutableLiveData<PermissionStatus> = MutableLiveData<PermissionStatus>().default(PermissionStatus.PERMISSION_DENIED)
 
     @OnLifecycleEvent(Lifecycle.Event.ON_START)
     fun start() {
         Timber.d("CurrentRateViewModel start")
-        countryDisposable = model.getBaseCurrency()
+        countryDisposable = model.getBaseCurrency(fineLocationPermissionStatus.value ?: PermissionStatus.PERMISSION_DENIED)
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnDispose { Timber.d("country query is disposed") }
                 .subscribeOn(Schedulers.io())

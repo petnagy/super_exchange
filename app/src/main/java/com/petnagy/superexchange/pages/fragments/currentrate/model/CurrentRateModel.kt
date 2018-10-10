@@ -1,5 +1,6 @@
 package com.petnagy.superexchange.pages.fragments.currentrate.model
 
+import com.petnagy.superexchange.permission.PermissionStatus
 import io.reactivex.Single
 
 /***
@@ -7,8 +8,12 @@ import io.reactivex.Single
  */
 class CurrentRateModel {
 
-    fun getBaseCurrency(): Single<String> {
-        return Single.just("HUF")
+    fun getBaseCurrency(fineLocationPermission: PermissionStatus): Single<String> {
+        return if (fineLocationPermission == PermissionStatus.PERMISSION_GRANTED) {
+            Single.just("HUF")
+        } else {
+            Single.never()
+        }
     }
 
 }
