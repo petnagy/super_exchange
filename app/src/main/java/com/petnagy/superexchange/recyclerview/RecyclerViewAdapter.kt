@@ -8,6 +8,9 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.petnagy.superexchange.BR
 
+/***
+ * General RecyclerView Adapter.
+ */
 class RecyclerViewAdapter : RecyclerView.Adapter<BindingViewHolder>() {
 
     var items: MutableList<ListItemViewModel> = ArrayList()

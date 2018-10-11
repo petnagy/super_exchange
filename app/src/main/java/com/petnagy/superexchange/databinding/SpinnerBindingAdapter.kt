@@ -4,6 +4,10 @@ import android.databinding.BindingAdapter
 import android.widget.ArrayAdapter
 import android.widget.Spinner
 
+/***
+ * Spinner related bindig adapter.
+ */
+
 @BindingAdapter("data")
 fun setupSpinnerData(spinner: Spinner, list: List<String>) {
     val adapter = ArrayAdapter<String>(spinner.context, android.R.layout.simple_spinner_dropdown_item, list)

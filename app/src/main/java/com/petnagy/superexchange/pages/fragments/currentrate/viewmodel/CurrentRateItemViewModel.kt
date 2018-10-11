@@ -4,6 +4,9 @@ import android.databinding.Bindable
 import com.petnagy.superexchange.recyclerview.ListItemViewModel
 import java.math.BigDecimal
 
+/***
+ * CurrentRateItem's ViewModel which is used in the RecyclerView.
+ */
 class CurrentRateItemViewModel(private val currency: String, private val rate: BigDecimal) : ListItemViewModel() {
 
     override fun areItemsTheSame(newItem: ListItemViewModel): Boolean {

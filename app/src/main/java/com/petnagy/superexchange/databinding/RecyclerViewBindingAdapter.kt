@@ -8,6 +8,10 @@ import com.petnagy.superexchange.recyclerview.ListItemViewModel
 import com.petnagy.superexchange.recyclerview.RecyclerViewAdapter
 import com.petnagy.superexchange.recyclerview.SpaceItemDecorator
 
+/***
+ * RecyclerView realted binding adapters, to use it in view.
+ */
+
 @BindingAdapter("source")
 fun setupRecyclerViewSource(recyclerView: RecyclerView, source: List<ListItemViewModel>) {
     getAdapter(recyclerView).items = source.toMutableList()

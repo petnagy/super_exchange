@@ -2,6 +2,9 @@ package com.petnagy.superexchange.recyclerview
 
 import android.support.v7.util.DiffUtil
 
+/***
+ * DiffUtil's callback to handle changes.
+ */
 class ListItemViewModelDiffCallback(private val oldItems: List<ListItemViewModel>, private val newItems: List<ListItemViewModel>) : DiffUtil.Callback() {
 
     override fun getOldListSize(): Int {
