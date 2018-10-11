@@ -55,7 +55,7 @@
             app:layout_constraintStart_toEndOf="@+id/current_rate_label"
             app:layout_constraintTop_toTopOf="parent"
             bind:data="@{viewModel.currenciesList}"
-            bind:selectedValue="@{viewModel.baseCurrency}"/>
+            bind:selectedValue="@{viewModel.baseCurrency}" />
 
         <TextView
             android:id="@+id/amount_label"
@@ -107,7 +107,9 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/amount_number">
+            app:layout_constraintTop_toBottomOf="@+id/amount_number"
+            bind:itemLayout="@{@layout/rate_item_layout}"
+            bind:source="@{viewModel.rates}">
 
         </android.support.v7.widget.RecyclerView>
 
