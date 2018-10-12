@@ -11,6 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.petnagy.superexchange.R
 import com.petnagy.superexchange.databinding.CurrentRateFragmentBinding
+import com.petnagy.superexchange.location.LocationStatus
 import com.petnagy.superexchange.pages.fragments.currentrate.viewmodel.CurrentRateViewModel
 import com.petnagy.superexchange.pages.fragments.currentrate.viewmodel.CurrentRateViewModelFactory
 import com.petnagy.superexchange.permission.PermissionManager
@@ -36,13 +37,15 @@ class CurrentRateFragment : DaggerFragment() {
         super.onCreate(savedInstanceState)
         viewModel = ViewModelProviders.of(this, viewModelFactory)[CurrentRateViewModel::class.java]
         lifecycle.addObserver(viewModel)
-        viewModel.fineLocationPermissionStatus.observe(this, Observer<PermissionStatus> { permissionStatus ->
-            Timber.d("PermissionStatus $permissionStatus")
-            when (permissionStatus) {
-                PermissionStatus.CAN_ASK_PERMISSION -> showPermissionNeedDialog()
-                PermissionStatus.PERMISSION_DENIED -> askPermission()
+        viewModel.status.observe(this, Observer<LocationStatus> { locationStatus ->
+            when (locationStatus) {
+                LocationStatus.PERMISSION_NEED -> askPermission()
+                LocationStatus.PERMISSION_DENIED -> showPermissionNeedDialog()
+                LocationStatus.LOCATION_ERROR -> showLocationErrorDialog()
+                LocationStatus.PLAY_SERVICE_ERROR -> showPlayServiceErrorDialog()
+                LocationStatus.SETTING_ERROR -> showSettingsErrorDialog()
                 else -> {
-                    //Do nothing
+                    //DO nothing
                 }
             }
         })
@@ -73,6 +76,18 @@ class CurrentRateFragment : DaggerFragment() {
     }
 
     private fun showPermissionNeedDialog() {
+
+    }
+
+    private fun showPlayServiceErrorDialog() {
+
+    }
+
+    private fun showSettingsErrorDialog() {
+
+    }
+
+    private fun showLocationErrorDialog() {
 
     }
 

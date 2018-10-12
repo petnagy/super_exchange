@@ -1,12 +1,16 @@
 package com.petnagy.superexchange.pages.fragments.currentrate.model
 
-import android.annotation.SuppressLint
-import android.location.Address
 import android.location.Location
 import com.google.android.gms.location.LocationRequest
-import com.patloew.rxlocation.RxLocation
 import com.petnagy.superexchange.data.Currency
 import com.petnagy.superexchange.data.LatestRate
+import com.petnagy.superexchange.errors.LocationSettingsException
+import com.petnagy.superexchange.errors.NoPlayServiceException
+import com.petnagy.superexchange.errors.PermissionNotGrantedException
+import com.petnagy.superexchange.location.AddressProvider
+import com.petnagy.superexchange.location.LocationProvider
+import com.petnagy.superexchange.location.LocationSettingChecker
+import com.petnagy.superexchange.location.PlayServiceChecker
 import com.petnagy.superexchange.permission.PermissionStatus
 import com.petnagy.superexchange.repository.LatestRateCompositeRepository
 import com.petnagy.superexchange.repository.LatestRateSpecification
@@ -15,11 +19,17 @@ import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import timber.log.Timber
+import java.text.SimpleDateFormat
+import java.util.*
 
 /***
  * Model class for Current Rate page.
  */
-class CurrentRateModel(private val rxLocation: RxLocation, private val compositeRepository: LatestRateCompositeRepository) {
+class CurrentRateModel(private val playServiceChecker: PlayServiceChecker,
+                       private val locationSettingChecker: LocationSettingChecker,
+                       private val locationProvider: LocationProvider,
+                       private val addressProvider: AddressProvider,
+                       private val compositeRepository: LatestRateCompositeRepository) {
 
     private val locationRequest = LocationRequest()
 
@@ -30,36 +40,43 @@ class CurrentRateModel(private val rxLocation: RxLocation, private val composite
     }
 
     fun getBaseCurrency(fineLocationPermission: PermissionStatus): Observable<String> {
-        return if (fineLocationPermission == PermissionStatus.PERMISSION_GRANTED) {
-            rxLocation.settings().checkAndHandleResolution(locationRequest)
-                    .flatMapObservable(this::getAddressObservable)
-                    .map { address -> address.countryCode }
-        } else {
-            Observable.never()
+        return when(fineLocationPermission) {
+            PermissionStatus.PERMISSION_GRANTED -> playServiceChecker.checkPlayService().flatMap(this::checkSettings).flatMapObservable(this::getLocation).flatMapSingle(this::getCountryCode)
+            PermissionStatus.CAN_ASK_PERMISSION -> Observable.error(PermissionNotGrantedException())
+            PermissionStatus.PERMISSION_DENIED -> Observable.error(PermissionNotGrantedException())
         }
     }
 
-    @SuppressLint("MissingPermission")
-    private fun getAddressObservable(success: Boolean): Observable<Address>? {
+    fun queryCurrentRate(baseCurrency: String): Single<LatestRate> {
+        val symbols = Currency.values().joinToString(separator = ",")
+        val date = SimpleDateFormat("yyyy-MM-dd").format(Date())
+        return compositeRepository.load(LatestRateSpecification(symbols, baseCurrency, date)).toSingle()
+    }
+
+    private fun checkSettings(playServiceAvailable: Boolean): Single<Boolean> {
+        return if (playServiceAvailable) {
+            locationSettingChecker.checkLocationSettings(locationRequest)
+        } else {
+            Single.error(NoPlayServiceException())
+        }
+    }
+
+    private fun getLocation(success: Boolean): Observable<Location> {
         return if (success) {
-            rxLocation.location().updates(locationRequest)
+            locationProvider.getLocation(locationRequest)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .flatMap(this::getAddressFromLocation)
+                    .doOnNext { location -> Timber.d(location.toString()) }
         } else {
-            Observable.error(RuntimeException("Something wrong"))
+            Observable.error(LocationSettingsException())
         }
     }
 
-    private fun getAddressFromLocation(location: Location): Observable<Address>? {
-        return rxLocation.geocoding().fromLocation(location).toObservable()
-                .doOnNext { address -> Timber.d(address.toString()) }
+    private fun getCountryCode(location: Location): Single<String> {
+        return addressProvider.getCountryCode(location)
+                .doOnSuccess { address -> Timber.d(address) }
                 .subscribeOn(Schedulers.io())
-    }
 
-    fun queryCurrentRate(): Single<LatestRate> {
-        val symbols = Currency.values().joinToString(separator = ",")
-        return compositeRepository.load(LatestRateSpecification(symbols, "EUR", "2018-10-12")).toSingle()
     }
 
 }
