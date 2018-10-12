@@ -7,6 +7,8 @@ import com.petnagy.superexchange.network.FixerIoEndpoint
 import com.petnagy.superexchange.pages.fragments.currentrate.model.CurrentRateModel
 import com.petnagy.superexchange.pages.fragments.currentrate.viewmodel.CurrentRateViewModelFactory
 import com.petnagy.superexchange.permission.PermissionManager
+import com.petnagy.superexchange.repository.LatestRateCompositeRepository
+import com.petnagy.superexchange.repository.LatestRateNetworkRepository
 import dagger.Module
 import dagger.Provides
 
@@ -20,7 +22,7 @@ class CurrentRateFragmentModule {
     internal fun provideRxLocation(@AppContext context: Context) = RxLocation(context)
 
     @Provides
-    internal fun provideCurrentRateModel(rxLocation: RxLocation, fixerIoEndpoint: FixerIoEndpoint) = CurrentRateModel(rxLocation, fixerIoEndpoint)
+    internal fun provideCurrentRateModel(rxLocation: RxLocation, compositeRepository: LatestRateCompositeRepository) = CurrentRateModel(rxLocation, compositeRepository)
 
     @Provides
     internal fun provideViewModelFactory(currentRateModel: CurrentRateModel): CurrentRateViewModelFactory = CurrentRateViewModelFactory(currentRateModel)

@@ -1,11 +1,17 @@
 package com.petnagy.superexchange.inject.modules
 
+import android.arch.persistence.room.Room
 import android.content.Context
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.petnagy.superexchange.SuperExchange
 import com.petnagy.superexchange.inject.AppContext
 import com.petnagy.superexchange.network.FixerIoEndpoint
+import com.petnagy.superexchange.repository.LatestRateCompositeRepository
+import com.petnagy.superexchange.repository.LatestRateNetworkRepository
+import com.petnagy.superexchange.repository.LatestRateRoomRepository
+import com.petnagy.superexchange.room.AppDatabase
+import com.petnagy.superexchange.room.LatestRateDao
 import dagger.Module
 import dagger.Provides
 import okhttp3.OkHttpClient
@@ -55,4 +61,26 @@ class DaggerApplicationModule {
     @Provides
     @Singleton
     fun provideEndpoint(retrofit: Retrofit): FixerIoEndpoint = retrofit.create<FixerIoEndpoint>(FixerIoEndpoint::class.java)
+
+    @Provides
+    @Singleton
+    fun provideAppDatabase(@AppContext context: Context): AppDatabase {
+        return Room.databaseBuilder(context, AppDatabase::class.java, "database").build()
+    }
+
+    @Provides
+    @Singleton
+    fun provideLatestRateDao(appDatabase: AppDatabase): LatestRateDao = appDatabase.latestRateDao()
+
+    @Provides
+    @Singleton
+    fun provideLatestRateNetworkRepository(endpoint: FixerIoEndpoint) = LatestRateNetworkRepository(endpoint)
+
+    @Provides
+    @Singleton
+    fun provideLatestRateRoomRepository(latestRateDao: LatestRateDao) = LatestRateRoomRepository(latestRateDao)
+
+    @Provides
+    @Singleton
+    fun provideLatestRateCompositeRepository(networkRepository: LatestRateNetworkRepository, roomRepository: LatestRateRoomRepository) = LatestRateCompositeRepository(networkRepository, roomRepository)
 }

@@ -5,11 +5,11 @@ import android.location.Address
 import android.location.Location
 import com.google.android.gms.location.LocationRequest
 import com.patloew.rxlocation.RxLocation
-import com.petnagy.superexchange.BuildConfig
 import com.petnagy.superexchange.data.Currency
 import com.petnagy.superexchange.data.LatestRate
-import com.petnagy.superexchange.network.FixerIoEndpoint
 import com.petnagy.superexchange.permission.PermissionStatus
+import com.petnagy.superexchange.repository.LatestRateCompositeRepository
+import com.petnagy.superexchange.repository.LatestRateSpecification
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -19,7 +19,7 @@ import timber.log.Timber
 /***
  * Model class for Current Rate page.
  */
-class CurrentRateModel(private val rxLocation: RxLocation, private val fixerIoEndpoint: FixerIoEndpoint) {
+class CurrentRateModel(private val rxLocation: RxLocation, private val compositeRepository: LatestRateCompositeRepository) {
 
     private val locationRequest = LocationRequest()
 
@@ -58,9 +58,8 @@ class CurrentRateModel(private val rxLocation: RxLocation, private val fixerIoEn
     }
 
     fun queryCurrentRate(): Single<LatestRate> {
-        //Put your API key in your gradle.properties file in your home directory
         val symbols = Currency.values().joinToString(separator = ",")
-        return fixerIoEndpoint.getCurrentRate(symbols, BuildConfig.ApiKey)
+        return compositeRepository.load(LatestRateSpecification(symbols, "EUR", "2018-10-12")).toSingle()
     }
 
 }

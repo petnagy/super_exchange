@@ -49,6 +49,18 @@ ext {
     rxAndroidVersion = '2.0.2'
     liveDataVersion = '1.1.1'
     playlocationVersion = '16.0.0'
+    roomVersion = '1.1.1'
+}
+
+configurations.all {
+    resolutionStrategy.eachDependency { DependencyResolveDetails details ->
+        def requested = details.requested
+        if (requested.group == "com.android.support") {
+            if (!requested.name.startsWith("multidex")) {
+                details.useVersion "26.+"
+            }
+        }
+    }
 }
 
 dependencies {
@@ -91,6 +103,11 @@ dependencies {
     //location
     implementation "com.google.android.gms:play-services-location:$playlocationVersion"
     implementation 'com.patloew.rxlocation:rxlocation:1.0.5'
+
+    // Room
+    implementation "android.arch.persistence.room:runtime:$roomVersion"
+    implementation "android.arch.persistence.room:rxjava2:$roomVersion"
+    kapt "android.arch.persistence.room:compiler:$roomVersion"
 
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
