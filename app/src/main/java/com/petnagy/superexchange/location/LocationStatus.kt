@@ -1,5 +1,8 @@
 package com.petnagy.superexchange.location
 
+/***
+ * Location status to show error dialog.
+ */
 enum class LocationStatus {
 
     STATUS_OK,

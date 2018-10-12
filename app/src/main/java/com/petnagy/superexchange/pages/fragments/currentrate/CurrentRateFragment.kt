@@ -15,7 +15,6 @@ import com.petnagy.superexchange.location.LocationStatus
 import com.petnagy.superexchange.pages.fragments.currentrate.viewmodel.CurrentRateViewModel
 import com.petnagy.superexchange.pages.fragments.currentrate.viewmodel.CurrentRateViewModelFactory
 import com.petnagy.superexchange.permission.PermissionManager
-import com.petnagy.superexchange.permission.PermissionStatus
 import dagger.android.support.DaggerFragment
 import timber.log.Timber
 import javax.inject.Inject
