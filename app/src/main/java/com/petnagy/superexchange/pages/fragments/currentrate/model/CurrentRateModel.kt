@@ -6,6 +6,7 @@ import com.petnagy.superexchange.data.Currency
 import com.petnagy.superexchange.data.LatestRate
 import com.petnagy.superexchange.errors.LocationSettingsException
 import com.petnagy.superexchange.errors.NoPlayServiceException
+import com.petnagy.superexchange.errors.PermissionDeniedException
 import com.petnagy.superexchange.errors.PermissionNotGrantedException
 import com.petnagy.superexchange.location.AddressProvider
 import com.petnagy.superexchange.location.LocationProvider
@@ -42,7 +43,7 @@ class CurrentRateModel(private val playServiceChecker: PlayServiceChecker,
     fun getBaseCurrency(fineLocationPermission: PermissionStatus): Observable<String> {
         return when(fineLocationPermission) {
             PermissionStatus.PERMISSION_GRANTED -> playServiceChecker.checkPlayService().flatMap(this::checkSettings).flatMapObservable(this::getLocation).flatMapSingle(this::getCountryCode)
-            PermissionStatus.CAN_ASK_PERMISSION -> Observable.error(PermissionNotGrantedException())
+            PermissionStatus.CAN_ASK_PERMISSION -> Observable.error(PermissionDeniedException())
             PermissionStatus.PERMISSION_DENIED -> Observable.error(PermissionNotGrantedException())
         }
     }
