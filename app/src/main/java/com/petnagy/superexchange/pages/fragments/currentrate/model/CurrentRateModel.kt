@@ -15,6 +15,7 @@ import com.petnagy.superexchange.location.PlayServiceChecker
 import com.petnagy.superexchange.permission.PermissionStatus
 import com.petnagy.superexchange.repository.LatestRateCompositeRepository
 import com.petnagy.superexchange.repository.LatestRateSpecification
+import com.petnagy.superexchange.repository.Repository
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -30,7 +31,7 @@ class CurrentRateModel(private val playServiceChecker: PlayServiceChecker,
                        private val locationSettingChecker: LocationSettingChecker,
                        private val locationProvider: LocationProvider,
                        private val addressProvider: AddressProvider,
-                       private val compositeRepository: LatestRateCompositeRepository) {
+                       private val compositeRepository: Repository<LatestRate>) {
 
     private val locationRequest = LocationRequest()
 

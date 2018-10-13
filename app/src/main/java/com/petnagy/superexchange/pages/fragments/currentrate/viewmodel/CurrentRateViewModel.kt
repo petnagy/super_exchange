@@ -1,6 +1,7 @@
 package com.petnagy.superexchange.pages.fragments.currentrate.viewmodel
 
 import android.arch.lifecycle.*
+import com.petnagy.superexchange.convert.RateConverter
 import com.petnagy.superexchange.data.Country
 import com.petnagy.superexchange.data.Currency
 import com.petnagy.superexchange.data.LatestRate
@@ -16,12 +17,11 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import timber.log.Timber
-import java.math.RoundingMode
 
 /***
  * Current Rate related ViewModel.
  */
-class CurrentRateViewModel(private val model: CurrentRateModel) : ViewModel(), LifecycleObserver {
+class CurrentRateViewModel(private val model: CurrentRateModel, private val rateConverter: RateConverter) : ViewModel(), LifecycleObserver {
 
     val loading = MutableLiveData<Boolean>()
     val baseCurrency = MutableLiveData<String>()
@@ -69,14 +69,7 @@ class CurrentRateViewModel(private val model: CurrentRateModel) : ViewModel(), L
     private fun processLatestRate(result: LatestRate) {
         Timber.d("LatestRate is arrived: $result")
         loading.value = false
-        val baseRate = result.rates[baseCurrency.value]
-        baseRate?.let { rate ->
-            val convertedMap = result.rates.mapValues { entry ->
-                entry.value.divide(rate, 6, RoundingMode.CEILING)
-            }
-            Timber.d("Converted map: $convertedMap")
-            rates.value = convertedMap.map { entry -> CurrentRateItemViewModel(entry.key, entry.value) }.toList()
-        }
+        rates.value = rateConverter.convertLatestRate(result, baseCurrency.value ?: "")
     }
 
     private fun processLatestRateError(error: Throwable) {

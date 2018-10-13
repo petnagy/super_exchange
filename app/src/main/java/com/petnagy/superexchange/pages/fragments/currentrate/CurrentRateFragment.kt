@@ -95,6 +95,7 @@ class CurrentRateFragment : DaggerFragment() {
         when(requestCode) {
             REQUEST_CODE_FINE_LOCATION -> checkPermission()
         }
+        viewModel.start()
     }
 
     companion object {

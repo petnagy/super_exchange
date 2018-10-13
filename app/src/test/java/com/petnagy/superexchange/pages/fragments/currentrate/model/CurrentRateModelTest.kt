@@ -2,6 +2,7 @@ package com.petnagy.superexchange.pages.fragments.currentrate.model
 
 import android.location.Location
 import com.google.android.gms.location.LocationRequest
+import com.petnagy.superexchange.data.LatestRate
 import com.petnagy.superexchange.errors.LocationSettingsException
 import com.petnagy.superexchange.errors.NoPlayServiceException
 import com.petnagy.superexchange.errors.PermissionDeniedException
@@ -11,7 +12,7 @@ import com.petnagy.superexchange.location.LocationProvider
 import com.petnagy.superexchange.location.LocationSettingChecker
 import com.petnagy.superexchange.location.PlayServiceChecker
 import com.petnagy.superexchange.permission.PermissionStatus
-import com.petnagy.superexchange.repository.LatestRateCompositeRepository
+import com.petnagy.superexchange.repository.Repository
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.observers.TestObserver
@@ -36,9 +37,10 @@ class CurrentRateModelTest {
 
     private lateinit var mockedAddressProvider: AddressProvider
 
-    private lateinit var mockedRepository: LatestRateCompositeRepository
+    private lateinit var mockedRepository: Repository<LatestRate>
 
-    inline fun <reified T: Any> mock() = Mockito.mock(T::class.java)
+    private inline fun <reified T: Any> mock() = Mockito.mock(T::class.java)
+    //inline fun <reified T : Any> argumentCaptor() = ArgumentCaptor.forClass(T::class.java)
 
     companion object {
         @ClassRule @JvmField

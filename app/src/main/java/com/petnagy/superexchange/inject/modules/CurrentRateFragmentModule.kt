@@ -2,6 +2,7 @@ package com.petnagy.superexchange.inject.modules
 
 import android.content.Context
 import com.patloew.rxlocation.RxLocation
+import com.petnagy.superexchange.convert.RateConverter
 import com.petnagy.superexchange.inject.AppContext
 import com.petnagy.superexchange.location.AddressProvider
 import com.petnagy.superexchange.location.LocationProvider
@@ -42,7 +43,10 @@ class CurrentRateFragmentModule {
             CurrentRateModel(playServiceChecker, locationSettingChecker, locationProvider, addressProvider, compositeRepository)
 
     @Provides
-    internal fun provideViewModelFactory(currentRateModel: CurrentRateModel): CurrentRateViewModelFactory = CurrentRateViewModelFactory(currentRateModel)
+    internal fun provideRateConverter() = RateConverter()
+
+    @Provides
+    internal fun provideViewModelFactory(currentRateModel: CurrentRateModel, rateConverter: RateConverter): CurrentRateViewModelFactory = CurrentRateViewModelFactory(currentRateModel, rateConverter)
 
     @Provides
     internal fun providePermissionManager() = PermissionManager()
