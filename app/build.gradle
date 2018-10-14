@@ -102,6 +102,9 @@ dependencies {
     implementation "android.arch.persistence.room:rxjava2:$roomVersion"
     kapt "android.arch.persistence.room:compiler:$roomVersion"
 
+    //REDUX
+    implementation 'com.petnagy.koredux:koredux:0.1.1'
+
     testImplementation 'junit:junit:4.12'
     testImplementation 'org.mockito:mockito-core:2.21.0'
     testImplementation 'org.mockito:mockito-inline:2.8.9'
