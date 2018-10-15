@@ -32,9 +32,10 @@ class AppReducer : Reducer<AppState> {
             is PermissionDeniedAction -> state = state.copy(loading = false, locationSearchState = LocationStatus.PERMISSION_DENIED)
             is LocationSettingsErrorAction -> state = state.copy(loading = false, locationSearchState = LocationStatus.SETTING_ERROR)
             is NotValidCountryCodeAction -> state = state.copy(loading = false, locationSearchState = LocationStatus.LOCATION_ERROR)
-            is SetBaseCurrencyAction -> state = state.copy(baseCurrency = action.baseCurrency, latestRate = null, locationSearchState = LocationStatus.STATUS_OK)
+            is SetBaseCurrencyAction -> state = state.copy(baseCurrency = action.baseCurrency, latestRate = null, locationSearchState = LocationStatus.STATUS_OK, amount = 1)
             is SetLatestRateAction -> state = state.copy(loading = false, latestRate = action.latestRate)
             is NetworkErrorAction -> state = state.copy(loading = false, locationSearchState = LocationStatus.NETWORK_ERROR)
+            is CalculateRatesAction -> state = state.copy(amount = action.amount)
         }
         return state
     }

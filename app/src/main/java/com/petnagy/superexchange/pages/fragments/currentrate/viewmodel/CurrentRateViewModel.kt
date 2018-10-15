@@ -10,6 +10,7 @@ import com.petnagy.superexchange.data.Currency
 import com.petnagy.superexchange.extensions.default
 import com.petnagy.superexchange.location.LocationStatus
 import com.petnagy.superexchange.permission.PermissionStatus
+import com.petnagy.superexchange.redux.action.CalculateRatesAction
 import com.petnagy.superexchange.redux.action.SetBaseCurrencyAction
 import com.petnagy.superexchange.redux.action.StartLocationSearchAction
 import com.petnagy.superexchange.redux.state.AppState
@@ -26,12 +27,14 @@ class CurrentRateViewModel(private val store: Store<AppState>, private val rateC
     val rates = MutableLiveData<List<CurrentRateItemViewModel>>().default(emptyList())
     val fineLocationPermissionStatus: MutableLiveData<PermissionStatus> = MutableLiveData<PermissionStatus>().default(PermissionStatus.PERMISSION_DENIED)
     val status: MutableLiveData<LocationStatus> = MutableLiveData<LocationStatus>().default(LocationStatus.STATUS_OK)
+    val amount: MediatorLiveData<Int> = MediatorLiveData<Int>().default(1)
 
     override fun newState(state: AppState) {
         loading.value = state.latestRateState.loading
         baseCurrency.value = state.latestRateState.baseCurrency?.name
+        amount.value = state.latestRateState.amount
         if (state.latestRateState.latestRate != null && state.latestRateState.baseCurrency != null) {
-            rates.value = rateConverter.convertLatestRate(state.latestRateState.latestRate, state.latestRateState.baseCurrency.name)
+            rates.value = rateConverter.convertLatestRate(state.latestRateState.latestRate, state.latestRateState.baseCurrency.name, state.latestRateState.amount)
         } else {
             rates.value = emptyList()
         }
@@ -50,7 +53,7 @@ class CurrentRateViewModel(private val store: Store<AppState>, private val rateC
         Timber.d("CurrentRateViewModel stop")
     }
 
-    fun getSelectedListener() = object: AdapterView.OnItemSelectedListener {
+    fun getSelectedListener() = object : AdapterView.OnItemSelectedListener {
         override fun onNothingSelected(parent: AdapterView<*>?) {
             //Do nothing
         }
@@ -60,5 +63,10 @@ class CurrentRateViewModel(private val store: Store<AppState>, private val rateC
             baseCurrency.value = currency
             store.dispatch(SetBaseCurrencyAction(Currency.valueOf(currency)))
         }
+    }
+
+    fun onCalculatePressed(view: View) {
+        Timber.d("Calculate button pressed")
+        store.dispatch(CalculateRatesAction(amount.value ?: 1))
     }
 }

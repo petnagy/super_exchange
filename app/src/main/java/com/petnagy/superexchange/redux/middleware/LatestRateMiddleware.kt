@@ -7,6 +7,7 @@ import com.petnagy.koredux.Middleware
 import com.petnagy.koredux.Store
 import com.petnagy.superexchange.data.Currency
 import com.petnagy.superexchange.data.LatestRate
+import com.petnagy.superexchange.redux.action.CalculateRatesAction
 import com.petnagy.superexchange.redux.action.NetworkErrorAction
 import com.petnagy.superexchange.redux.action.SetBaseCurrencyAction
 import com.petnagy.superexchange.redux.action.SetLatestRateAction
@@ -24,6 +25,7 @@ class LatestRateMiddleware(private val repository: Repository<LatestRate>): Midd
     override fun invoke(store: Store<AppState>, action: Action, next: DispatchFunction) {
         when(action) {
             is SetBaseCurrencyAction -> queryLatestRate(store)
+            is CalculateRatesAction -> queryLatestRate(store)
         }
         next.dispatch(action)
     }

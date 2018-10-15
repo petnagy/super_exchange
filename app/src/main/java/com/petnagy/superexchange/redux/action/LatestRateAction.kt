@@ -5,3 +5,4 @@ import com.petnagy.superexchange.data.LatestRate
 
 class SetLatestRateAction(val latestRate: LatestRate): Action
 class NetworkErrorAction: Action
+class CalculateRatesAction(val amount: Int): Action
