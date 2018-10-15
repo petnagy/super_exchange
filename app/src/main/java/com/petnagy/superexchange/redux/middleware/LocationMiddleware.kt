@@ -7,6 +7,7 @@ import com.petnagy.koredux.Action
 import com.petnagy.koredux.DispatchFunction
 import com.petnagy.koredux.Middleware
 import com.petnagy.koredux.Store
+import com.petnagy.superexchange.data.Country
 import com.petnagy.superexchange.location.AddressProvider
 import com.petnagy.superexchange.location.LocationProvider
 import com.petnagy.superexchange.location.LocationSettingChecker
@@ -118,7 +119,10 @@ class LocationMiddleware(private val playServiceChecker: PlayServiceChecker, pri
     }
 
     private fun handleCountryCode(store: Store<AppState>, countryCode: String) {
-        //TODO check country
-        //TODO set base currency by country code
+        if (Country.checkCountryCodeSupported(countryCode)) {
+            store.dispatch(SetBaseCurrencyAction(Country.valueOf(countryCode)))
+        } else {
+            store.dispatch(NotValidCountryCodeAction())
+        }
     }
 }

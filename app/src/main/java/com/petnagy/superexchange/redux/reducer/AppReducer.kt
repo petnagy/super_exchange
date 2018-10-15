@@ -25,12 +25,16 @@ class AppReducer: Reducer<AppState> {
     private fun latestRateReducer(action: Action, oldLatestRateState: LatestRateState): LatestRateState {
         var state = oldLatestRateState
         when (action) {
-            is StartLocationSearchAction -> state = state.copy(loading = true, locationSearchState = LocationStatus.STATUS_OK)
+            is StartLocationSearchAction -> state = state.copy(loading = true, locationSearchState = LocationStatus.STATUS_OK, latestRate = null)
             is LocationSearchErrorAction -> state = state.copy(loading = false, locationSearchState = LocationStatus.LOCATION_ERROR)
             is NoPlayServiceAction -> state = state.copy(loading = false, locationSearchState = LocationStatus.PLAY_SERVICE_ERROR)
             is CanAskPermissionAction -> state = state.copy(loading = false, locationSearchState = LocationStatus.PERMISSION_NEED)
             is PermissionDeniedAction -> state = state.copy(loading = false, locationSearchState = LocationStatus.PERMISSION_DENIED)
             is LocationSettingsErrorAction -> state = state.copy(loading = false, locationSearchState = LocationStatus.SETTING_ERROR)
+            is NotValidCountryCodeAction -> state = state.copy(loading = false, locationSearchState = LocationStatus.LOCATION_ERROR)
+            is SetBaseCurrencyAction -> state = state.copy(baseCurrency = action.country.currency, locationSearchState = LocationStatus.STATUS_OK)
+            is SetLatestRateAction -> state = state.copy(loading = false, latestRate = action.latestRate)
+            is NetworkErrorAction -> state = state.copy(loading = false, locationSearchState = LocationStatus.NETWORK_ERROR)
         }
         return state
     }

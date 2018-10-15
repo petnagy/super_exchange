@@ -4,6 +4,7 @@ import com.petnagy.superexchange.data.LatestRate
 import com.petnagy.superexchange.room.LatestRateDao
 import io.reactivex.Completable
 import io.reactivex.Maybe
+import io.reactivex.functions.Predicate
 import timber.log.Timber
 
 /***
@@ -20,15 +21,16 @@ class LatestRateRoomRepository(private val latestRateDao: LatestRateDao) : Repos
         return if (specification !is LatestRateSpecification) {
             Maybe.error(IllegalArgumentException("Wrong specification"))
         } else {
-            latestRateDao.query(specification.base, specification.date).filter { latestRate -> isDoNotCallTimeOver(latestRate) }
+            Timber.d("baseCurrency = ${specification.base}, date = ${specification.date}")
+            latestRateDao.query(specification.base, specification.date).filter { latestRate -> isDoNotCallTimeOver(latestRate = latestRate) }
         }
     }
 
     private fun isDoNotCallTimeOver(latestRate: LatestRate) = latestRate.timestamp + ONE_HOUR_IN_MILLI_SEC > System.currentTimeMillis().div(ONE_SEC_IN_MILLI_SEC)
 
     override fun save(item: LatestRate): Completable {
-        Timber.d("Save into room")
-        return Completable.fromAction { latestRateDao.insert(item) }
+        Timber.d("Save into room baseCurrency = ${item.base}, date = ${item.date}")
+        return Completable.fromAction { latestRateDao.insert(item) }.doOnError { error -> Timber.e(error) }
     }
 
 }

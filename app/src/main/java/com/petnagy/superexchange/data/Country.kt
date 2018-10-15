@@ -20,4 +20,12 @@ enum class Country(val currency: Currency) {
     DE(Currency.EUR),
     GR(Currency.EUR),
     UK(Currency.GBP);
+
+    companion object {
+        fun checkCountryCodeSupported(countryCode: String): Boolean {
+            val validatedCountry = values().map { country -> country.name }.find { value -> value == countryCode }
+            return validatedCountry != null
+        }
+    }
+
 }

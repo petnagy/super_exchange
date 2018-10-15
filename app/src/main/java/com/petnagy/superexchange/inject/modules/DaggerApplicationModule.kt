@@ -13,6 +13,7 @@ import com.petnagy.superexchange.location.LocationProvider
 import com.petnagy.superexchange.location.LocationSettingChecker
 import com.petnagy.superexchange.location.PlayServiceChecker
 import com.petnagy.superexchange.network.FixerIoEndpoint
+import com.petnagy.superexchange.redux.middleware.LatestRateMiddleware
 import com.petnagy.superexchange.redux.middleware.LocationMiddleware
 import com.petnagy.superexchange.redux.middleware.LoggingMiddleware
 import com.petnagy.superexchange.redux.reducer.AppReducer
@@ -45,8 +46,8 @@ class DaggerApplicationModule {
 
     @Provides
     @Singleton
-    fun provideStore(locationMiddleware: LocationMiddleware): Store<AppState>
-            = Store(AppReducer(), listOf(LoggingMiddleware(), locationMiddleware), AppState(latestRateState = LatestRateState()))
+    fun provideStore(locationMiddleware: LocationMiddleware, latestRateMiddleware: LatestRateMiddleware): Store<AppState>
+            = Store(AppReducer(), listOf(LoggingMiddleware(), locationMiddleware, latestRateMiddleware), AppState(latestRateState = LatestRateState()))
 
     @Provides
     @Singleton
@@ -54,6 +55,10 @@ class DaggerApplicationModule {
                                   locationProvider: LocationProvider, addressProvider: AddressProvider): LocationMiddleware {
         return LocationMiddleware(playServiceChecker, locationSettingChecker, locationProvider, addressProvider)
     }
+
+    @Provides
+    @Singleton
+    fun provideLatestRateMiddleware(latestRateCompositeRepository: LatestRateCompositeRepository) = LatestRateMiddleware(latestRateCompositeRepository)
 
     @Provides
     internal fun provideRxLocation(@AppContext context: Context) = RxLocation(context)

@@ -14,20 +14,13 @@ class LatestRateCompositeRepository(private val networkRepo: LatestRateNetworkRe
         return if (specification !is LatestRateSpecification) {
             Maybe.error(IllegalArgumentException("Wrong specification"))
         } else {
-            Maybe.concat(loadFromCache(specification), loadFromNet(specification)).firstElement()
+            roomRepo.load(specification).doOnSuccess { Timber.d("Load from cache") }
+                    .switchIfEmpty(networkRepo.load(specification).doAfterSuccess { latestRate -> roomRepo.save(latestRate).subscribe() })
         }
     }
 
     override fun save(item: LatestRate): Completable {
         //Do not call it
         return Completable.never()
-    }
-
-    private fun loadFromCache(specification: LatestRateSpecification): Maybe<LatestRate> {
-        return roomRepo.load(specification).doOnSuccess { Timber.d("Load from cache") }
-    }
-
-    private fun loadFromNet(specification: Specification): Maybe<LatestRate> {
-        return networkRepo.load(specification).doAfterSuccess { latestRate -> roomRepo.save(latestRate).subscribe() }
     }
 }
