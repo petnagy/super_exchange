@@ -11,7 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.petnagy.superexchange.R
 import com.petnagy.superexchange.databinding.CurrentRateFragmentBinding
-import com.petnagy.superexchange.location.LocationStatus
+import com.petnagy.superexchange.location.LatestRateStatus
 import com.petnagy.superexchange.pages.fragments.currentrate.viewmodel.CurrentRateViewModel
 import com.petnagy.superexchange.pages.fragments.currentrate.viewmodel.CurrentRateViewModelFactory
 import com.petnagy.superexchange.permission.PermissionManager
@@ -36,13 +36,16 @@ class CurrentRateFragment : DaggerFragment() {
         super.onCreate(savedInstanceState)
         viewModel = ViewModelProviders.of(this, viewModelFactory)[CurrentRateViewModel::class.java]
         lifecycle.addObserver(viewModel)
-        viewModel.status.observe(this, Observer<LocationStatus> { locationStatus ->
+        viewModel.status.observe(this, Observer<LatestRateStatus> { locationStatus ->
+            Timber.d("Status changed: ${locationStatus?.name}")
             when (locationStatus) {
-                LocationStatus.PERMISSION_NEED -> askPermission()
-                LocationStatus.PERMISSION_DENIED -> showPermissionNeedDialog()
-                LocationStatus.LOCATION_ERROR -> showLocationErrorDialog()
-                LocationStatus.PLAY_SERVICE_ERROR -> showPlayServiceErrorDialog()
-                LocationStatus.SETTING_ERROR -> showSettingsErrorDialog()
+                LatestRateStatus.PERMISSION_DENIED -> askPermission()
+                LatestRateStatus.PERMISSION_NEED -> showPermissionNeedDialog()
+                LatestRateStatus.LOCATION_ERROR -> showLocationErrorDialog()
+                LatestRateStatus.PLAY_SERVICE_ERROR -> showPlayServiceErrorDialog()
+                LatestRateStatus.SETTING_ERROR -> showSettingsErrorDialog()
+                LatestRateStatus.NETWORK_ERROR -> showNetworkErrorDialog()
+                LatestRateStatus.NOT_VALID_COUNTRY_CODE -> showNotValidCountryCodeDialog()
                 else -> {
                     //DO nothing
                 }
@@ -87,6 +90,14 @@ class CurrentRateFragment : DaggerFragment() {
     }
 
     private fun showLocationErrorDialog() {
+
+    }
+
+    private fun showNetworkErrorDialog() {
+
+    }
+
+    private fun showNotValidCountryCodeDialog() {
 
     }
 

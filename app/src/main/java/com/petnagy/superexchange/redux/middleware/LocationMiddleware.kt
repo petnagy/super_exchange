@@ -8,10 +8,7 @@ import com.petnagy.koredux.DispatchFunction
 import com.petnagy.koredux.Middleware
 import com.petnagy.koredux.Store
 import com.petnagy.superexchange.data.Country
-import com.petnagy.superexchange.location.AddressProvider
-import com.petnagy.superexchange.location.LocationProvider
-import com.petnagy.superexchange.location.LocationSettingChecker
-import com.petnagy.superexchange.location.PlayServiceChecker
+import com.petnagy.superexchange.location.*
 import com.petnagy.superexchange.permission.PermissionStatus
 import com.petnagy.superexchange.redux.action.*
 import com.petnagy.superexchange.redux.state.AppState
@@ -44,8 +41,8 @@ class LocationMiddleware(private val playServiceChecker: PlayServiceChecker, pri
     private fun checkPermission(store: Store<AppState>, permissionStatus: PermissionStatus) {
         when(permissionStatus) {
             PermissionStatus.PERMISSION_GRANTED -> store.dispatch(CheckPlayServiceAction())
-            PermissionStatus.CAN_ASK_PERMISSION -> store.dispatch(CanAskPermissionAction())
-            PermissionStatus.PERMISSION_DENIED -> store.dispatch(PermissionDeniedAction())
+            PermissionStatus.CAN_ASK_PERMISSION -> store.dispatch(LatestRateErrorAction(LatestRateStatus.PERMISSION_NEED))
+            PermissionStatus.PERMISSION_DENIED -> store.dispatch(LatestRateErrorAction(LatestRateStatus.PERMISSION_DENIED))
         }
     }
 
@@ -61,7 +58,7 @@ class LocationMiddleware(private val playServiceChecker: PlayServiceChecker, pri
     }
 
     private fun handleError(store: Store<AppState>, error: Throwable) {
-        store.dispatch(LocationSearchErrorAction())
+        store.dispatch(LatestRateErrorAction(LatestRateStatus.LOCATION_ERROR))
         Timber.e(error, "Something went wrong!")
     }
 
@@ -69,7 +66,7 @@ class LocationMiddleware(private val playServiceChecker: PlayServiceChecker, pri
         if (success) {
             store.dispatch(CheckLocationSettingsAction())
         } else {
-            store.dispatch(NoPlayServiceAction())
+            store.dispatch(LatestRateErrorAction(LatestRateStatus.PLAY_SERVICE_ERROR))
         }
     }
 
@@ -88,7 +85,7 @@ class LocationMiddleware(private val playServiceChecker: PlayServiceChecker, pri
         if (success) {
             store.dispatch(RequestLocationAction())
         } else {
-            store.dispatch(LocationSettingsErrorAction())
+            store.dispatch(LatestRateErrorAction(LatestRateStatus.SETTING_ERROR))
         }
     }
 
@@ -98,13 +95,9 @@ class LocationMiddleware(private val playServiceChecker: PlayServiceChecker, pri
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
-                        { location -> handleLocation(store, location)} ,
+                        { location -> store.dispatch(GetLocationAction(location))} ,
                         { error -> handleError(store, error)}
                 )
-    }
-
-    private fun handleLocation(store: Store<AppState>, location: Location) {
-        store.dispatch(GetLocationAction(location))
     }
 
     @SuppressLint("CheckResult")
@@ -122,7 +115,7 @@ class LocationMiddleware(private val playServiceChecker: PlayServiceChecker, pri
         if (Country.checkCountryCodeSupported(countryCode)) {
             store.dispatch(SetBaseCurrencyAction(Country.valueOf(countryCode).currency))
         } else {
-            store.dispatch(NotValidCountryCodeAction())
+            store.dispatch(LatestRateErrorAction(LatestRateStatus.NOT_VALID_COUNTRY_CODE))
         }
     }
 }

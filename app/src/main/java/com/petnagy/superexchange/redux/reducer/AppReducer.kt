@@ -2,7 +2,7 @@ package com.petnagy.superexchange.redux.reducer
 
 import com.petnagy.koredux.Action
 import com.petnagy.koredux.Reducer
-import com.petnagy.superexchange.location.LocationStatus
+import com.petnagy.superexchange.location.LatestRateStatus
 import com.petnagy.superexchange.redux.action.*
 import com.petnagy.superexchange.redux.state.AppState
 import com.petnagy.superexchange.redux.state.FragmentState
@@ -25,16 +25,11 @@ class AppReducer : Reducer<AppState> {
     private fun latestRateReducer(action: Action, oldLatestRateState: LatestRateState): LatestRateState {
         var state = oldLatestRateState
         when (action) {
-            is StartLocationSearchAction -> state = state.copy(loading = true, locationSearchState = LocationStatus.STATUS_OK, latestRate = null)
-            is LocationSearchErrorAction -> state = state.copy(loading = false, locationSearchState = LocationStatus.LOCATION_ERROR)
-            is NoPlayServiceAction -> state = state.copy(loading = false, locationSearchState = LocationStatus.PLAY_SERVICE_ERROR)
-            is CanAskPermissionAction -> state = state.copy(loading = false, locationSearchState = LocationStatus.PERMISSION_NEED)
-            is PermissionDeniedAction -> state = state.copy(loading = false, locationSearchState = LocationStatus.PERMISSION_DENIED)
-            is LocationSettingsErrorAction -> state = state.copy(loading = false, locationSearchState = LocationStatus.SETTING_ERROR)
-            is NotValidCountryCodeAction -> state = state.copy(loading = false, locationSearchState = LocationStatus.LOCATION_ERROR)
-            is SetBaseCurrencyAction -> state = state.copy(baseCurrency = action.baseCurrency, latestRate = null, locationSearchState = LocationStatus.STATUS_OK, amount = 1)
+            is StartLocationSearchAction -> state = state.copy(loading = true, latestRate = null)
+            is LatestRateErrorAction -> state = state.copy(loading = false, status = action.status)
+            is SetBaseCurrencyAction -> state = state.copy(baseCurrency = action.baseCurrency, latestRate = null, status = LatestRateStatus.STATUS_OK, amount = 1)
             is SetLatestRateAction -> state = state.copy(loading = false, latestRate = action.latestRate)
-            is NetworkErrorAction -> state = state.copy(loading = false, locationSearchState = LocationStatus.NETWORK_ERROR)
+            is NetworkErrorAction -> state = state.copy(loading = false, status = LatestRateStatus.NETWORK_ERROR)
             is CalculateRatesAction -> state = state.copy(amount = action.amount)
         }
         return state

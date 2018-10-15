@@ -18,9 +18,11 @@ fun setupSpinnerData(spinner: Spinner, list: List<String>) {
 
 @BindingAdapter("selectedValue")
 fun setupSelectedValue(spinner: Spinner, value: String?) {
-    val selectedIndex = IntRange(0, spinner.count).firstOrNull { item -> value != null && spinner.getItemAtPosition(item) == value }
-    selectedIndex?.let { index ->
-        spinner.setSelection(index)
+    if (spinner.adapter.count > 0) {
+        val selectedIndex = IntRange(0, spinner.count).firstOrNull { item -> value != null && spinner.getItemAtPosition(item) == value }
+        selectedIndex?.let { index ->
+            spinner.setSelection(index)
+        }
     }
 }
 
