@@ -8,7 +8,7 @@ import com.petnagy.superexchange.redux.state.AppState
 import com.petnagy.superexchange.redux.state.FragmentState
 import com.petnagy.superexchange.redux.state.LatestRateState
 
-class AppReducer: Reducer<AppState> {
+class AppReducer : Reducer<AppState> {
     override fun invoke(action: Action, state: AppState): AppState {
         return AppState(fragmentState = fragmentStateReducer(action, state.fragmentState),
                 latestRateState = latestRateReducer(action, state.latestRateState))
@@ -16,7 +16,7 @@ class AppReducer: Reducer<AppState> {
 
     private fun fragmentStateReducer(action: Action, oldFragmentState: FragmentState): FragmentState {
         var state = oldFragmentState
-        when(action) {
+        when (action) {
             //TODO change fragment
         }
         return state
@@ -32,7 +32,7 @@ class AppReducer: Reducer<AppState> {
             is PermissionDeniedAction -> state = state.copy(loading = false, locationSearchState = LocationStatus.PERMISSION_DENIED)
             is LocationSettingsErrorAction -> state = state.copy(loading = false, locationSearchState = LocationStatus.SETTING_ERROR)
             is NotValidCountryCodeAction -> state = state.copy(loading = false, locationSearchState = LocationStatus.LOCATION_ERROR)
-            is SetBaseCurrencyAction -> state = state.copy(baseCurrency = action.country.currency, locationSearchState = LocationStatus.STATUS_OK)
+            is SetBaseCurrencyAction -> state = state.copy(baseCurrency = action.baseCurrency, latestRate = null, locationSearchState = LocationStatus.STATUS_OK)
             is SetLatestRateAction -> state = state.copy(loading = false, latestRate = action.latestRate)
             is NetworkErrorAction -> state = state.copy(loading = false, locationSearchState = LocationStatus.NETWORK_ERROR)
         }

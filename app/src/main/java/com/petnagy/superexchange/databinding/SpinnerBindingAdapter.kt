@@ -1,6 +1,7 @@
 package com.petnagy.superexchange.databinding
 
 import android.databinding.BindingAdapter
+import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Spinner
 
@@ -11,7 +12,7 @@ import android.widget.Spinner
 @BindingAdapter("data")
 fun setupSpinnerData(spinner: Spinner, list: List<String>) {
     val adapter = ArrayAdapter<String>(spinner.context, android.R.layout.simple_spinner_dropdown_item, list)
-    adapter.setDropDownViewResource( android.R.layout.simple_spinner_dropdown_item)
+    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
     spinner.adapter = adapter
 }
 
@@ -21,4 +22,9 @@ fun setupSelectedValue(spinner: Spinner, value: String?) {
     selectedIndex?.let { index ->
         spinner.setSelection(index)
     }
+}
+
+@BindingAdapter("selectedListener")
+fun setupSelectionListener(spinner: Spinner, onItemSelectedListener: AdapterView.OnItemSelectedListener) {
+    spinner.onItemSelectedListener = onItemSelectedListener
 }

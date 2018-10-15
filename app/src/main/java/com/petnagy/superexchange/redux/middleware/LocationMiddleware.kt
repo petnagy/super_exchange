@@ -120,7 +120,7 @@ class LocationMiddleware(private val playServiceChecker: PlayServiceChecker, pri
 
     private fun handleCountryCode(store: Store<AppState>, countryCode: String) {
         if (Country.checkCountryCodeSupported(countryCode)) {
-            store.dispatch(SetBaseCurrencyAction(Country.valueOf(countryCode)))
+            store.dispatch(SetBaseCurrencyAction(Country.valueOf(countryCode).currency))
         } else {
             store.dispatch(NotValidCountryCodeAction())
         }

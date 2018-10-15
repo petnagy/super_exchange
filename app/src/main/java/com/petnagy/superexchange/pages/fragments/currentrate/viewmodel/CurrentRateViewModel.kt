@@ -1,6 +1,8 @@
 package com.petnagy.superexchange.pages.fragments.currentrate.viewmodel
 
 import android.arch.lifecycle.*
+import android.view.View
+import android.widget.AdapterView
 import com.petnagy.koredux.Store
 import com.petnagy.koredux.StoreSubscriber
 import com.petnagy.superexchange.convert.RateConverter
@@ -8,6 +10,7 @@ import com.petnagy.superexchange.data.Currency
 import com.petnagy.superexchange.extensions.default
 import com.petnagy.superexchange.location.LocationStatus
 import com.petnagy.superexchange.permission.PermissionStatus
+import com.petnagy.superexchange.redux.action.SetBaseCurrencyAction
 import com.petnagy.superexchange.redux.action.StartLocationSearchAction
 import com.petnagy.superexchange.redux.state.AppState
 import timber.log.Timber
@@ -45,5 +48,17 @@ class CurrentRateViewModel(private val store: Store<AppState>, private val rateC
     fun stop() {
         store.unsubscribe(this)
         Timber.d("CurrentRateViewModel stop")
+    }
+
+    fun getSelectedListener() = object: AdapterView.OnItemSelectedListener {
+        override fun onNothingSelected(parent: AdapterView<*>?) {
+            //Do nothing
+        }
+
+        override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+            val currency = currenciesList[position]
+            baseCurrency.value = currency
+            store.dispatch(SetBaseCurrencyAction(Currency.valueOf(currency)))
+        }
     }
 }

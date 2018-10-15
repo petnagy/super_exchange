@@ -54,6 +54,7 @@
             app:layout_constraintEnd_toEndOf="@+id/progress"
             app:layout_constraintStart_toEndOf="@+id/current_rate_label"
             app:layout_constraintTop_toTopOf="parent"
+            bind:selectedListener="@{viewModel.selectedListener}"
             bind:data="@{viewModel.currenciesList}"
             bind:selectedValue="@{viewModel.baseCurrency}" />
 
