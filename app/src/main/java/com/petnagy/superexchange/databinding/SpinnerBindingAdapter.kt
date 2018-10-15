@@ -6,7 +6,7 @@ import android.widget.ArrayAdapter
 import android.widget.Spinner
 
 /***
- * Spinner related bindig adapter.
+ * Spinner related binding adapter.
  */
 
 @BindingAdapter("data")
