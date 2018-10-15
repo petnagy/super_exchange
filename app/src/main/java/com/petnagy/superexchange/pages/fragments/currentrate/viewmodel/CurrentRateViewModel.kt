@@ -23,7 +23,7 @@ class CurrentRateViewModel(private val store: Store<AppState>, private val rateC
 
     val loading = MutableLiveData<Boolean>()
     val baseCurrency = MutableLiveData<String>()
-    val currenciesList = MutableLiveData<List<String>>().default(emptyList())
+    val currenciesList = Currency.values().map { currency -> currency.name }.toList()
     val rates = MutableLiveData<List<CurrentRateItemViewModel>>().default(emptyList())
     val fineLocationPermissionStatus: MutableLiveData<PermissionStatus> = MutableLiveData<PermissionStatus>().default(PermissionStatus.PERMISSION_DENIED)
     val status: MutableLiveData<LatestRateStatus> = MutableLiveData<LatestRateStatus>().default(LatestRateStatus.STATUS_UNKNOWN)
@@ -31,13 +31,7 @@ class CurrentRateViewModel(private val store: Store<AppState>, private val rateC
 
     override fun newState(state: AppState) {
         loading.value = state.latestRateState.loading
-        val currencyList = currenciesList.value ?: emptyList()
-        if (state.latestRateState.baseCurrency != null && state.latestRateState.status == LatestRateStatus.STATUS_OK && currencyList.isEmpty()) {
-            currenciesList.value = Currency.values().map { currency -> currency.name }.toList()
-        } else {
-            currenciesList.value = emptyList()
-        }
-        if (baseCurrency.value != state.latestRateState.baseCurrency?.name) {
+        if (baseCurrencyEmptyOrChanged(state)) {
             baseCurrency.value = state.latestRateState.baseCurrency?.name
         }
         amount.value = state.latestRateState.amount
@@ -49,9 +43,13 @@ class CurrentRateViewModel(private val store: Store<AppState>, private val rateC
         }
     }
 
+    private fun baseCurrencyEmptyOrChanged(state: AppState) =
+            baseCurrency.value == null || baseCurrency.value != state.latestRateState.baseCurrency?.name
+
     @OnLifecycleEvent(Lifecycle.Event.ON_START)
     fun start() {
         store.subscribe(this)
+        baseCurrency.value = null
         store.dispatch(StartLocationSearchAction(fineLocationPermissionStatus.value
                 ?: PermissionStatus.PERMISSION_DENIED))
     }
@@ -68,12 +66,8 @@ class CurrentRateViewModel(private val store: Store<AppState>, private val rateC
         }
 
         override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-            val currencyList: List<String> = currenciesList.value ?: emptyList()
-            if (currencyList.isNotEmpty()) {
-                val currency = currencyList[position]
-                baseCurrency.value = currency
-                store.dispatch(SetBaseCurrencyAction(Currency.valueOf(currency)))
-            }
+            val currency = currenciesList[position]
+            store.dispatch(SetBaseCurrencyAction(Currency.valueOf(currency)))
         }
     }
 
