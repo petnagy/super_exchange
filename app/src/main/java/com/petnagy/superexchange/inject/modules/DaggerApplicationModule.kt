@@ -18,6 +18,7 @@ import com.petnagy.superexchange.redux.middleware.LocationMiddleware
 import com.petnagy.superexchange.redux.middleware.LoggingMiddleware
 import com.petnagy.superexchange.redux.reducer.AppReducer
 import com.petnagy.superexchange.redux.state.AppState
+import com.petnagy.superexchange.redux.state.HistoryRateState
 import com.petnagy.superexchange.redux.state.LatestRateState
 import com.petnagy.superexchange.repository.LatestRateCompositeRepository
 import com.petnagy.superexchange.repository.LatestRateNetworkRepository
@@ -47,7 +48,7 @@ class DaggerApplicationModule {
     @Provides
     @Singleton
     fun provideStore(locationMiddleware: LocationMiddleware, latestRateMiddleware: LatestRateMiddleware): Store<AppState>
-            = Store(AppReducer(), listOf(LoggingMiddleware(), locationMiddleware, latestRateMiddleware), AppState(latestRateState = LatestRateState()))
+            = Store(AppReducer(), listOf(LoggingMiddleware(), locationMiddleware, latestRateMiddleware), AppState(latestRateState = LatestRateState(), historyRateState = HistoryRateState()))
 
     @Provides
     @Singleton

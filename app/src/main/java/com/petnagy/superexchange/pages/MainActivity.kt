@@ -10,6 +10,8 @@ import com.petnagy.koredux.Store
 import com.petnagy.koredux.StoreSubscriber
 import com.petnagy.superexchange.R
 import com.petnagy.superexchange.pages.fragments.currentrate.CurrentRateFragment
+import com.petnagy.superexchange.pages.fragments.history.HistoryFragment
+import com.petnagy.superexchange.redux.action.FragmentSwitchAction
 import com.petnagy.superexchange.redux.state.AppState
 import com.petnagy.superexchange.redux.state.FragmentState
 import dagger.android.support.DaggerAppCompatActivity
@@ -48,9 +50,9 @@ class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemS
 
     override fun onNavigationItemSelected(menuItem: MenuItem): Boolean {
         if (menuItem.itemId == R.id.today_rate) {
-
+            store.dispatch(FragmentSwitchAction(FragmentState.LATEST_RATE))
         } else if (menuItem.itemId == R.id.history_rate) {
-
+            store.dispatch(FragmentSwitchAction(FragmentState.HISTORY))
         }
         drawer_layout.closeDrawer(GravityCompat.START)
         return true
@@ -94,6 +96,11 @@ class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemS
             val fragment = supportFragmentManager.findFragmentByTag(CONTENT_TAG)
             if (fragment !is CurrentRateFragment) {
                 replaceContent(CurrentRateFragment.newInstance())
+            }
+        } else if (state.fragmentState == FragmentState.HISTORY) {
+            val fragment = supportFragmentManager.findFragmentByTag(CONTENT_TAG)
+            if (fragment !is HistoryFragment) {
+                replaceContent(HistoryFragment.newInstance())
             }
         }
     }

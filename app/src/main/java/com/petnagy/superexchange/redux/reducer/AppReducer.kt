@@ -6,18 +6,20 @@ import com.petnagy.superexchange.location.LatestRateStatus
 import com.petnagy.superexchange.redux.action.*
 import com.petnagy.superexchange.redux.state.AppState
 import com.petnagy.superexchange.redux.state.FragmentState
+import com.petnagy.superexchange.redux.state.HistoryRateState
 import com.petnagy.superexchange.redux.state.LatestRateState
 
 class AppReducer : Reducer<AppState> {
     override fun invoke(action: Action, state: AppState): AppState {
         return AppState(fragmentState = fragmentStateReducer(action, state.fragmentState),
-                latestRateState = latestRateReducer(action, state.latestRateState))
+                latestRateState = latestRateReducer(action, state.latestRateState),
+                historyRateState = historyRateReducer(action, state.historyRateState))
     }
 
     private fun fragmentStateReducer(action: Action, oldFragmentState: FragmentState): FragmentState {
         var state = oldFragmentState
         when (action) {
-            //TODO change fragment
+            is FragmentSwitchAction -> state = action.fragmentName
         }
         return state
     }
@@ -31,6 +33,14 @@ class AppReducer : Reducer<AppState> {
             is SetLatestRateAction -> state = state.copy(loading = false, latestRate = action.latestRate)
             is NetworkErrorAction -> state = state.copy(loading = false, status = LatestRateStatus.NETWORK_ERROR)
             is CalculateRatesAction -> state = state.copy(amount = action.amount)
+        }
+        return state
+    }
+
+    private fun historyRateReducer(action: Action, oldHistoryRateState: HistoryRateState): HistoryRateState {
+        var state = oldHistoryRateState
+        when (action) {
+            //TODO implement this
         }
         return state
     }

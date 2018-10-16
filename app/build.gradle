@@ -54,6 +54,7 @@ ext {
     liveDataVersion = '1.1.1'
     playlocationVersion = '16.0.0'
     roomVersion = '1.1.1'
+    androidplotVersion = '1.5.1'
 }
 
 dependencies {
@@ -104,6 +105,8 @@ dependencies {
 
     //REDUX
     implementation 'com.petnagy.koredux:koredux:0.1.1'
+
+    implementation "com.androidplot:androidplot-core:$androidplotVersion"
 
     testImplementation 'junit:junit:4.12'
     testImplementation 'org.mockito:mockito-core:2.21.0'
