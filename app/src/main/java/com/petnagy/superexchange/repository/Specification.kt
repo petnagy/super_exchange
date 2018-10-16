@@ -8,4 +8,4 @@ interface Specification
 /***
  * LatestRate related Specification.
  */
-class LatestRateSpecification(val symbols: String, val base: String, val date: String): Specification
+data class LatestRateSpecification(val symbols: String, val base: String, val date: String): Specification

@@ -1,11 +1,15 @@
 package com.petnagy.superexchange.redux.middleware
 
+import com.nhaarman.mockitokotlin2.mock
 import com.petnagy.koredux.DispatchFunction
 import com.petnagy.koredux.Store
 import com.petnagy.superexchange.data.Currency
 import com.petnagy.superexchange.data.LatestRate
-import com.petnagy.superexchange.pages.fragments.currentrate.model.RxImmediateSchedulerRule
+import com.petnagy.superexchange.RxImmediateSchedulerRule
+import com.petnagy.superexchange.redux.action.CalculateRatesAction
+import com.petnagy.superexchange.redux.action.NetworkErrorAction
 import com.petnagy.superexchange.redux.action.SetBaseCurrencyAction
+import com.petnagy.superexchange.redux.action.SetLatestRateAction
 import com.petnagy.superexchange.redux.state.AppState
 import com.petnagy.superexchange.repository.LatestRateSpecification
 import com.petnagy.superexchange.repository.Repository
@@ -18,15 +22,12 @@ import org.junit.runner.RunWith
 import org.mockito.ArgumentCaptor
 import org.mockito.Mockito
 import org.mockito.junit.MockitoJUnitRunner
+import java.lang.RuntimeException
 import java.text.SimpleDateFormat
 import java.util.*
 
 @RunWith(MockitoJUnitRunner::class)
 class LatestRateMiddlewareTest {
-
-    private inline fun <reified T: Any> mock() = Mockito.mock(T::class.java)
-
-    inline fun <reified T : Any> argumentCaptor() = ArgumentCaptor.forClass(T::class.java)
 
     private lateinit var underTest: LatestRateMiddleware
 
@@ -50,19 +51,60 @@ class LatestRateMiddlewareTest {
     }
 
     @Test
-    fun testMiddlewareWithSetBaseCurrencyAction() {
+    fun testMiddlewareWith_SetBaseCurrencyAction_Success() {
         //GIVEN
-        val symbols = Currency.values().joinToString { "," }
+        val symbols = Currency.values().joinToString(",")
         val date = SimpleDateFormat("yyyy-MM-dd").format(Date())
-        Mockito.`when`(mockedRepository.load(LatestRateSpecification(symbols, "EUR", date))).thenReturn(Maybe.just(LatestRate(true, 1, "EUR", date, emptyMap())))
+        val latestRate = LatestRate(true, 1, "EUR", date, emptyMap())
+        Mockito.`when`(mockedRepository.load(LatestRateSpecification(symbols, "EUR", date))).thenReturn(Maybe.just(latestRate))
 
         //WHEN
-        underTest.invoke(mockedStore, SetBaseCurrencyAction(Currency.EUR), mockedDispatch)
+        underTest.invoke(mockedStore, SetBaseCurrencyAction(Currency.USD), mockedDispatch)
 
         //THEN
-        val captor = argumentCaptor<LatestRateSpecification>()
-        Mockito.verify(mockedRepository).load(captor.capture())
-        Assert.assertEquals(captor.value.symbols, Currency.values().joinToString { "," })
+        Mockito.verify(mockedStore).dispatch(SetLatestRateAction(latestRate))
     }
 
+    @Test
+    fun testMiddlewareWith_SetBaseCurrencyAction_Failed() {
+        //GIVEN
+        val symbols = Currency.values().joinToString(",")
+        val date = SimpleDateFormat("yyyy-MM-dd").format(Date())
+        Mockito.`when`(mockedRepository.load(LatestRateSpecification(symbols, "EUR", date))).thenReturn(Maybe.error(RuntimeException()))
+
+        //WHEN
+        underTest.invoke(mockedStore, SetBaseCurrencyAction(Currency.USD), mockedDispatch)
+
+        //THEN
+        Mockito.verify(mockedStore).dispatch(NetworkErrorAction())
+    }
+
+    @Test
+    fun testMiddlewareWith_CalculateRatesAction_Success() {
+        //GIVEN
+        val symbols = Currency.values().joinToString(",")
+        val date = SimpleDateFormat("yyyy-MM-dd").format(Date())
+        val latestRate = LatestRate(true, 1, "EUR", date, emptyMap())
+        Mockito.`when`(mockedRepository.load(LatestRateSpecification(symbols, "EUR", date))).thenReturn(Maybe.just(latestRate))
+
+        //WHEN
+        underTest.invoke(mockedStore, CalculateRatesAction(10), mockedDispatch)
+
+        //THEN
+        Mockito.verify(mockedStore).dispatch(SetLatestRateAction(latestRate))
+    }
+
+    @Test
+    fun testMiddlewareWith_CalculateRatesAction_Failed() {
+        //GIVEN
+        val symbols = Currency.values().joinToString(",")
+        val date = SimpleDateFormat("yyyy-MM-dd").format(Date())
+        Mockito.`when`(mockedRepository.load(LatestRateSpecification(symbols, "EUR", date))).thenReturn(Maybe.error(RuntimeException()))
+
+        //WHEN
+        underTest.invoke(mockedStore, CalculateRatesAction(10), mockedDispatch)
+
+        //THEN
+        Mockito.verify(mockedStore).dispatch(NetworkErrorAction())
+    }
 }

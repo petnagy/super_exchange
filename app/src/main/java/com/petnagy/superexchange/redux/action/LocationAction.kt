@@ -6,10 +6,22 @@ import com.petnagy.superexchange.data.Currency
 import com.petnagy.superexchange.location.LatestRateStatus
 import com.petnagy.superexchange.permission.PermissionStatus
 
-class StartLocationSearchAction(val permissionStatus: PermissionStatus) : Action
-class LatestRateErrorAction(val status: LatestRateStatus): Action
-class CheckPlayServiceAction: Action
-class CheckLocationSettingsAction : Action
-class RequestLocationAction : Action
-class GetLocationAction(val location: Location) : Action
-class SetBaseCurrencyAction(val baseCurrency: Currency) : Action
+class StartLocationSearchAction(val permissionStatus: PermissionStatus) : LocationAction()
+class LatestRateErrorAction(val status: LatestRateStatus): LocationAction()
+class CheckPlayServiceAction: LocationAction()
+class CheckLocationSettingsAction : LocationAction()
+class RequestLocationAction : LocationAction()
+class GetLocationAction(val location: Location) : LocationAction()
+class SetBaseCurrencyAction(val baseCurrency: Currency) : LocationAction()
+
+open class LocationAction: Action {
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is LocationAction) return false
+        return true
+    }
+
+    override fun hashCode(): Int {
+        return javaClass.hashCode()
+    }
+}

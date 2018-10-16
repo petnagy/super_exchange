@@ -20,10 +20,10 @@ import timber.log.Timber
 import java.text.SimpleDateFormat
 import java.util.*
 
-class LatestRateMiddleware(private val repository: Repository<LatestRate>): Middleware<AppState> {
+class LatestRateMiddleware(private val repository: Repository<LatestRate>) : Middleware<AppState> {
 
     override fun invoke(store: Store<AppState>, action: Action, next: DispatchFunction) {
-        when(action) {
+        when (action) {
             is SetBaseCurrencyAction -> queryLatestRate(store)
             is CalculateRatesAction -> queryLatestRate(store)
         }
@@ -40,13 +40,9 @@ class LatestRateMiddleware(private val repository: Repository<LatestRate>): Midd
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
-                        { latestRate -> handleLatestRate(store, latestRate)} ,
-                        { error -> handleError(store, error)}
+                        { latestRate -> store.dispatch(SetLatestRateAction(latestRate)) },
+                        { error -> handleError(store, error) }
                 )
-    }
-
-    private fun handleLatestRate(store: Store<AppState>, latestRate: LatestRate) {
-        store.dispatch(SetLatestRateAction(latestRate))
     }
 
     private fun handleError(store: Store<AppState>, error: Throwable) {

@@ -1,4 +1,4 @@
-package com.petnagy.superexchange.pages.fragments.currentrate.model
+package com.petnagy.superexchange
 
 import io.reactivex.Scheduler
 import io.reactivex.android.plugins.RxAndroidPlugins
