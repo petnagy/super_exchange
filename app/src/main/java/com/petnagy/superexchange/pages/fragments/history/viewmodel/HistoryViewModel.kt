@@ -1,9 +1,6 @@
 package com.petnagy.superexchange.pages.fragments.history.viewmodel
 
-import android.arch.lifecycle.Lifecycle
-import android.arch.lifecycle.LifecycleObserver
-import android.arch.lifecycle.OnLifecycleEvent
-import android.arch.lifecycle.ViewModel
+import android.arch.lifecycle.*
 import com.petnagy.koredux.Store
 import com.petnagy.koredux.StoreSubscriber
 import com.petnagy.superexchange.convert.RateConverter
@@ -12,6 +9,8 @@ import com.petnagy.superexchange.redux.state.AppState
 import timber.log.Timber
 
 class HistoryViewModel(private val store: Store<AppState>, private val converter: RateConverter) : ViewModel(), LifecycleObserver, StoreSubscriber<AppState> {
+
+    val loading = MutableLiveData<Boolean>()
 
     @OnLifecycleEvent(Lifecycle.Event.ON_START)
     fun start() {
@@ -27,7 +26,7 @@ class HistoryViewModel(private val store: Store<AppState>, private val converter
     }
 
     override fun newState(state: AppState) {
-
+        loading.value = state.historyRateState.loading
     }
 
 }

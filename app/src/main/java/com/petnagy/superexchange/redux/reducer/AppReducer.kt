@@ -2,6 +2,7 @@ package com.petnagy.superexchange.redux.reducer
 
 import com.petnagy.koredux.Action
 import com.petnagy.koredux.Reducer
+import com.petnagy.superexchange.data.Currency
 import com.petnagy.superexchange.location.LatestRateStatus
 import com.petnagy.superexchange.redux.action.*
 import com.petnagy.superexchange.redux.state.AppState
@@ -13,7 +14,7 @@ class AppReducer : Reducer<AppState> {
     override fun invoke(action: Action, state: AppState): AppState {
         return AppState(fragmentState = fragmentStateReducer(action, state.fragmentState),
                 latestRateState = latestRateReducer(action, state.latestRateState),
-                historyRateState = historyRateReducer(action, state.historyRateState))
+                historyRateState = historyRateReducer(action, state.historyRateState, state.latestRateState.baseCurrency))
     }
 
     private fun fragmentStateReducer(action: Action, oldFragmentState: FragmentState): FragmentState {
@@ -37,10 +38,17 @@ class AppReducer : Reducer<AppState> {
         return state
     }
 
-    private fun historyRateReducer(action: Action, oldHistoryRateState: HistoryRateState): HistoryRateState {
+    private fun historyRateReducer(action: Action, oldHistoryRateState: HistoryRateState, baseCurrency: Currency?): HistoryRateState {
         var state = oldHistoryRateState
         when (action) {
-            //TODO implement this
+            is FragmentSwitchAction -> {
+                if (action.fragmentName == FragmentState.HISTORY) {
+                    state = state.copy(baseCurrency = baseCurrency)
+                }
+            }
+            is LoadHistoryAction -> state = state.copy(loading = true, rates = null)
+            is SetHistoryListAction -> state = state.copy(loading = false, rates = action.historyList)
+            is HistoryErrorAction -> state = state.copy(loading = false, rates = null)
         }
         return state
     }
