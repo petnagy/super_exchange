@@ -13,6 +13,7 @@ import com.petnagy.superexchange.location.LocationProvider
 import com.petnagy.superexchange.location.LocationSettingChecker
 import com.petnagy.superexchange.location.PlayServiceChecker
 import com.petnagy.superexchange.network.FixerIoEndpoint
+import com.petnagy.superexchange.redux.middleware.HistoryMiddleware
 import com.petnagy.superexchange.redux.middleware.LatestRateMiddleware
 import com.petnagy.superexchange.redux.middleware.LocationMiddleware
 import com.petnagy.superexchange.redux.middleware.LoggingMiddleware
@@ -20,10 +21,9 @@ import com.petnagy.superexchange.redux.reducer.AppReducer
 import com.petnagy.superexchange.redux.state.AppState
 import com.petnagy.superexchange.redux.state.HistoryRateState
 import com.petnagy.superexchange.redux.state.LatestRateState
-import com.petnagy.superexchange.repository.LatestRateCompositeRepository
-import com.petnagy.superexchange.repository.LatestRateNetworkRepository
-import com.petnagy.superexchange.repository.LatestRateRoomRepository
+import com.petnagy.superexchange.repository.*
 import com.petnagy.superexchange.room.AppDatabase
+import com.petnagy.superexchange.room.HistoryRateDao
 import com.petnagy.superexchange.room.LatestRateDao
 import dagger.Module
 import dagger.Provides
@@ -47,8 +47,10 @@ class DaggerApplicationModule {
 
     @Provides
     @Singleton
-    fun provideStore(locationMiddleware: LocationMiddleware, latestRateMiddleware: LatestRateMiddleware): Store<AppState>
-            = Store(AppReducer(), listOf(LoggingMiddleware(), locationMiddleware, latestRateMiddleware), AppState(latestRateState = LatestRateState(), historyRateState = HistoryRateState()))
+    fun provideStore(locationMiddleware: LocationMiddleware, latestRateMiddleware: LatestRateMiddleware, historyMiddleware: HistoryMiddleware): Store<AppState> =
+            Store(AppReducer(),
+                    listOf(LoggingMiddleware(), locationMiddleware, latestRateMiddleware, historyMiddleware),
+                    AppState(latestRateState = LatestRateState(), historyRateState = HistoryRateState()))
 
     @Provides
     @Singleton
@@ -60,6 +62,10 @@ class DaggerApplicationModule {
     @Provides
     @Singleton
     fun provideLatestRateMiddleware(latestRateCompositeRepository: LatestRateCompositeRepository) = LatestRateMiddleware(latestRateCompositeRepository)
+
+    @Provides
+    @Singleton
+    fun provideHistoryMiddleware(historyRateComposeRepository: HistoryRateCompositeRepository): HistoryMiddleware = HistoryMiddleware(historyRateComposeRepository)
 
     @Provides
     internal fun provideRxLocation(@AppContext context: Context) = RxLocation(context)
@@ -118,6 +124,10 @@ class DaggerApplicationModule {
 
     @Provides
     @Singleton
+    fun provideHistoryRateDao(appDatabase: AppDatabase): HistoryRateDao = appDatabase.historyRateDao()
+
+    @Provides
+    @Singleton
     fun provideLatestRateNetworkRepository(endpoint: FixerIoEndpoint) = LatestRateNetworkRepository(endpoint)
 
     @Provides
@@ -126,5 +136,19 @@ class DaggerApplicationModule {
 
     @Provides
     @Singleton
-    fun provideLatestRateCompositeRepository(networkRepository: LatestRateNetworkRepository, roomRepository: LatestRateRoomRepository) = LatestRateCompositeRepository(networkRepository, roomRepository)
+    fun provideLatestRateCompositeRepository(networkRepository: LatestRateNetworkRepository, roomRepository: LatestRateRoomRepository) =
+            LatestRateCompositeRepository(networkRepository, roomRepository)
+
+    @Provides
+    @Singleton
+    fun provideHistoryRateNetworkRepository(endpoint: FixerIoEndpoint) = HistoryRateNetworkRepository(endpoint)
+
+    @Provides
+    @Singleton
+    fun provideHistoryRateRoomRepository(historyRateDao: HistoryRateDao) = HistoryRateRoomRepository(historyRateDao)
+
+    @Provides
+    @Singleton
+    fun provideHistoryRateCompositeRepository(networkRepository: HistoryRateNetworkRepository, roomRepository: HistoryRateRoomRepository) =
+            HistoryRateCompositeRepository(networkRepository, roomRepository)
 }
