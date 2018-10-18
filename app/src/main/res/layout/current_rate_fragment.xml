@@ -112,9 +112,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/amount_number"
             bind:itemLayout="@{@layout/rate_item_layout}"
-            bind:source="@{viewModel.rates}">
-
-        </android.support.v7.widget.RecyclerView>
+            bind:source="@{viewModel.rates}" />
 
     </android.support.constraint.ConstraintLayout>
 </layout>

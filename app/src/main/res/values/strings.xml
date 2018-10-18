@@ -7,4 +7,5 @@
     <string name="current_rate_base_currency_label">Base currency:</string>
     <string name="current_rate_amount_label">Amount:</string>
     <string name="current_rate_calc_button_label">Calculate</string>
+    <string name="history_base_currency_label">Base currency:</string>
 </resources>

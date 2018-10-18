@@ -14,6 +14,7 @@ import com.petnagy.superexchange.redux.action.CalculateRatesAction
 import com.petnagy.superexchange.redux.action.SetBaseCurrencyAction
 import com.petnagy.superexchange.redux.action.StartLocationSearchAction
 import com.petnagy.superexchange.redux.state.AppState
+import com.petnagy.superexchange.redux.state.FragmentState
 import timber.log.Timber
 
 /***
@@ -40,6 +41,10 @@ class CurrentRateViewModel(private val store: Store<AppState>, private val rateC
             rates.value = rateConverter.convertLatestRate(state.latestRateState.latestRate, state.latestRateState.baseCurrency.name, state.latestRateState.amount)
         } else {
             rates.value = emptyList()
+        }
+        //If Fragment changed unsubscribe from it.
+        if (state.fragmentState != FragmentState.LATEST_RATE) {
+            store.unsubscribe(this)
         }
     }
 
