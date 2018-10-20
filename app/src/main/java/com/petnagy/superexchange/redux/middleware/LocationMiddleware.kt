@@ -41,8 +41,8 @@ class LocationMiddleware(private val playServiceChecker: PlayServiceChecker, pri
     private fun checkPermission(store: Store<AppState>, permissionStatus: PermissionStatus) {
         when(permissionStatus) {
             PermissionStatus.PERMISSION_GRANTED -> store.dispatch(CheckPlayServiceAction())
-            PermissionStatus.CAN_ASK_PERMISSION -> store.dispatch(LatestRateErrorAction(LatestRateStatus.PERMISSION_NEED))
-            PermissionStatus.PERMISSION_DENIED -> store.dispatch(LatestRateErrorAction(LatestRateStatus.PERMISSION_DENIED))
+            PermissionStatus.CAN_ASK_PERMISSION -> store.dispatch(LatestRateErrorAction(LocationStatus.PERMISSION_NEED))
+            PermissionStatus.PERMISSION_DENIED -> store.dispatch(LatestRateErrorAction(LocationStatus.PERMISSION_DENIED))
         }
     }
 
@@ -58,7 +58,7 @@ class LocationMiddleware(private val playServiceChecker: PlayServiceChecker, pri
     }
 
     private fun handleError(store: Store<AppState>, error: Throwable) {
-        store.dispatch(LatestRateErrorAction(LatestRateStatus.LOCATION_ERROR))
+        store.dispatch(LatestRateErrorAction(LocationStatus.LOCATION_ERROR))
         Timber.e(error, "Something went wrong!")
     }
 
@@ -66,7 +66,7 @@ class LocationMiddleware(private val playServiceChecker: PlayServiceChecker, pri
         if (success) {
             store.dispatch(CheckLocationSettingsAction())
         } else {
-            store.dispatch(LatestRateErrorAction(LatestRateStatus.PLAY_SERVICE_ERROR))
+            store.dispatch(LatestRateErrorAction(LocationStatus.PLAY_SERVICE_ERROR))
         }
     }
 
@@ -85,7 +85,7 @@ class LocationMiddleware(private val playServiceChecker: PlayServiceChecker, pri
         if (success) {
             store.dispatch(RequestLocationAction())
         } else {
-            store.dispatch(LatestRateErrorAction(LatestRateStatus.SETTING_ERROR))
+            store.dispatch(LatestRateErrorAction(LocationStatus.SETTING_ERROR))
         }
     }
 
@@ -115,7 +115,7 @@ class LocationMiddleware(private val playServiceChecker: PlayServiceChecker, pri
         if (Country.checkCountryCodeSupported(countryCode)) {
             store.dispatch(SetBaseCurrencyAction(Country.valueOf(countryCode).currency))
         } else {
-            store.dispatch(LatestRateErrorAction(LatestRateStatus.NOT_VALID_COUNTRY_CODE))
+            store.dispatch(LatestRateErrorAction(LocationStatus.NOT_VALID_COUNTRY_CODE))
         }
     }
 }

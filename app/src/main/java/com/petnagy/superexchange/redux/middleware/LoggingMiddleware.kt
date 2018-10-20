@@ -8,11 +8,11 @@ import com.petnagy.superexchange.redux.action.LatestRateErrorAction
 import com.petnagy.superexchange.redux.state.AppState
 import timber.log.Timber
 
-class LoggingMiddleware: Middleware<AppState> {
+class LoggingMiddleware : Middleware<AppState> {
 
     override fun invoke(store: Store<AppState>, action: Action, next: DispatchFunction) {
         var log = "Action: -> " + action::class.java.simpleName
-        when(action) {
+        when (action) {
             is LatestRateErrorAction -> log += " error: ${action.status.name}"
         }
         Timber.d(log)

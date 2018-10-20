@@ -2,7 +2,7 @@ package com.petnagy.superexchange.redux.reducer
 
 import com.petnagy.superexchange.data.Currency
 import com.petnagy.superexchange.data.LatestRate
-import com.petnagy.superexchange.location.LatestRateStatus
+import com.petnagy.superexchange.location.LocationStatus
 import com.petnagy.superexchange.permission.PermissionStatus
 import com.petnagy.superexchange.redux.action.*
 import com.petnagy.superexchange.redux.state.AppState
@@ -40,10 +40,10 @@ class AppReducerTest {
     fun testWith_LatestRateErrorAction() {
         val latestRateState = LatestRateState(loading = true)
         val appState = AppState(latestRateState = latestRateState, historyRateState = HistoryRateState())
-        val newState = underTest.invoke(LatestRateErrorAction(LatestRateStatus.STATUS_UNKNOWN), appState)
+        val newState = underTest.invoke(LatestRateErrorAction(LocationStatus.STATUS_UNKNOWN), appState)
 
         Assert.assertEquals(false, newState.latestRateState.loading)
-        Assert.assertEquals(LatestRateStatus.STATUS_UNKNOWN, newState.latestRateState.status)
+        Assert.assertEquals(LocationStatus.STATUS_UNKNOWN, newState.latestRateState.status)
     }
 
     @Test
@@ -53,7 +53,7 @@ class AppReducerTest {
         val newState = underTest.invoke(SetBaseCurrencyAction(Currency.HUF), appState)
 
         Assert.assertEquals(Currency.HUF, newState.latestRateState.baseCurrency)
-        Assert.assertEquals(LatestRateStatus.STATUS_OK, newState.latestRateState.status)
+        Assert.assertEquals(LocationStatus.STATUS_OK, newState.latestRateState.status)
         Assert.assertNull(newState.latestRateState.latestRate)
         Assert.assertEquals(1, newState.latestRateState.amount)
     }
@@ -72,12 +72,12 @@ class AppReducerTest {
     @Test
     fun testWith_NetworkErrorAction() {
         val latestRate = LatestRate(true, 1, "EUR", "date", emptyMap())
-        val latestRateState = LatestRateState(latestRate = latestRate, status = LatestRateStatus.STATUS_OK)
+        val latestRateState = LatestRateState(latestRate = latestRate, status = LocationStatus.STATUS_OK)
         val appState = AppState(latestRateState = latestRateState, historyRateState = HistoryRateState())
         val newState = underTest.invoke(NetworkErrorAction(), appState)
 
         Assert.assertEquals(false, newState.latestRateState.loading)
-        Assert.assertEquals(LatestRateStatus.NETWORK_ERROR, newState.latestRateState.status)
+        Assert.assertEquals(LocationStatus.NETWORK_ERROR, newState.latestRateState.status)
     }
 
     @Test

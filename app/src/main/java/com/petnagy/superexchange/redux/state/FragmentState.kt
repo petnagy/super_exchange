@@ -4,5 +4,4 @@ enum class FragmentState {
 
     LATEST_RATE,
     HISTORY
-
 }

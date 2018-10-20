@@ -4,7 +4,6 @@ import com.petnagy.superexchange.data.LatestRate
 import com.petnagy.superexchange.room.LatestRateDao
 import io.reactivex.Completable
 import io.reactivex.Maybe
-import io.reactivex.functions.Predicate
 import timber.log.Timber
 
 /***

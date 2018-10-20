@@ -5,7 +5,7 @@ package com.petnagy.superexchange.data
  */
 enum class Country(val currency: Currency) {
 
-    //https://www.nationsonline.org/oneworld/country_code_list.htm
+    // https://www.nationsonline.org/oneworld/country_code_list.htm
 
     AT(Currency.EUR),
     BE(Currency.EUR),
@@ -27,5 +27,4 @@ enum class Country(val currency: Currency) {
             return validatedCountry != null
         }
     }
-
 }

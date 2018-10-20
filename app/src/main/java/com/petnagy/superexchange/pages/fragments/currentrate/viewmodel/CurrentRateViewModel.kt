@@ -8,7 +8,7 @@ import com.petnagy.koredux.StoreSubscriber
 import com.petnagy.superexchange.convert.RateConverter
 import com.petnagy.superexchange.data.Currency
 import com.petnagy.superexchange.extensions.default
-import com.petnagy.superexchange.location.LatestRateStatus
+import com.petnagy.superexchange.location.LocationStatus
 import com.petnagy.superexchange.permission.PermissionStatus
 import com.petnagy.superexchange.redux.action.CalculateRatesAction
 import com.petnagy.superexchange.redux.action.SetBaseCurrencyAction
@@ -27,7 +27,7 @@ class CurrentRateViewModel(private val store: Store<AppState>, private val rateC
     val currenciesList = Currency.values().map { currency -> currency.name }.toList()
     val rates = MutableLiveData<List<CurrentRateItemViewModel>>().default(emptyList())
     val fineLocationPermissionStatus: MutableLiveData<PermissionStatus> = MutableLiveData<PermissionStatus>().default(PermissionStatus.PERMISSION_DENIED)
-    val status: MutableLiveData<LatestRateStatus> = MutableLiveData<LatestRateStatus>().default(LatestRateStatus.STATUS_UNKNOWN)
+    val status: MutableLiveData<LocationStatus> = MutableLiveData<LocationStatus>().default(LocationStatus.STATUS_UNKNOWN)
     val amount: MediatorLiveData<Int> = MediatorLiveData<Int>().default(1)
 
     override fun newState(state: AppState) {

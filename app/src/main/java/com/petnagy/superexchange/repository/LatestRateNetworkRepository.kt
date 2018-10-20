@@ -5,7 +5,6 @@ import com.petnagy.superexchange.data.LatestRate
 import com.petnagy.superexchange.network.FixerIoEndpoint
 import io.reactivex.Completable
 import io.reactivex.Maybe
-import io.reactivex.Single
 
 /***
  * Network repository to get LatestRate data.

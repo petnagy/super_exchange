@@ -15,7 +15,7 @@ import dagger.android.support.DaggerFragment
 import timber.log.Timber
 import javax.inject.Inject
 
-class HistoryFragment: DaggerFragment() {
+class HistoryFragment : DaggerFragment() {
 
     @Inject
     lateinit var viewModelFactory: HistoryViewModelFactory

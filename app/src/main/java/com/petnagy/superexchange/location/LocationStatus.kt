@@ -3,7 +3,7 @@ package com.petnagy.superexchange.location
 /***
  * Latest rate status to show error dialog.
  */
-enum class LatestRateStatus {
+enum class LocationStatus {
 
     STATUS_UNKNOWN,
     STATUS_OK,

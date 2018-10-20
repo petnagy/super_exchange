@@ -62,7 +62,7 @@ class LocationMiddlewareTest {
         underTest.invoke(mockedStore, StartLocationSearchAction(PermissionStatus.PERMISSION_DENIED), mockedDispatchFunction)
 
         //THEN
-        Mockito.verify(mockedStore).dispatch(LatestRateErrorAction(LatestRateStatus.PERMISSION_DENIED))
+        Mockito.verify(mockedStore).dispatch(LatestRateErrorAction(LocationStatus.PERMISSION_DENIED))
     }
 
     @Test
@@ -73,7 +73,7 @@ class LocationMiddlewareTest {
         underTest.invoke(mockedStore, StartLocationSearchAction(PermissionStatus.CAN_ASK_PERMISSION), mockedDispatchFunction)
 
         //THEN
-        Mockito.verify(mockedStore).dispatch(LatestRateErrorAction(LatestRateStatus.PERMISSION_NEED))
+        Mockito.verify(mockedStore).dispatch(LatestRateErrorAction(LocationStatus.PERMISSION_NEED))
     }
 
     @Test
@@ -96,7 +96,7 @@ class LocationMiddlewareTest {
         underTest.invoke(mockedStore, CheckPlayServiceAction(), mockedDispatchFunction)
 
         //THEN
-        Mockito.verify(mockedStore).dispatch(LatestRateErrorAction(LatestRateStatus.LOCATION_ERROR))
+        Mockito.verify(mockedStore).dispatch(LatestRateErrorAction(LocationStatus.LOCATION_ERROR))
     }
 
     @Test
@@ -108,7 +108,7 @@ class LocationMiddlewareTest {
         underTest.invoke(mockedStore, CheckPlayServiceAction(), mockedDispatchFunction)
 
         //THEN
-        Mockito.verify(mockedStore).dispatch(LatestRateErrorAction(LatestRateStatus.PLAY_SERVICE_ERROR))
+        Mockito.verify(mockedStore).dispatch(LatestRateErrorAction(LocationStatus.PLAY_SERVICE_ERROR))
     }
 
     @Test
@@ -132,7 +132,7 @@ class LocationMiddlewareTest {
         underTest.invoke(mockedStore, CheckLocationSettingsAction(), mockedDispatchFunction)
 
         //THEN
-        Mockito.verify(mockedStore).dispatch(LatestRateErrorAction(LatestRateStatus.LOCATION_ERROR))
+        Mockito.verify(mockedStore).dispatch(LatestRateErrorAction(LocationStatus.LOCATION_ERROR))
     }
 
     @Test
@@ -144,7 +144,7 @@ class LocationMiddlewareTest {
         underTest.invoke(mockedStore, CheckLocationSettingsAction(), mockedDispatchFunction)
 
         //THEN
-        Mockito.verify(mockedStore).dispatch(LatestRateErrorAction(LatestRateStatus.SETTING_ERROR))
+        Mockito.verify(mockedStore).dispatch(LatestRateErrorAction(LocationStatus.SETTING_ERROR))
     }
 
     @Test
@@ -168,7 +168,7 @@ class LocationMiddlewareTest {
         underTest.invoke(mockedStore, RequestLocationAction(), mockedDispatchFunction)
 
         //THEN
-        Mockito.verify(mockedStore).dispatch(LatestRateErrorAction(LatestRateStatus.LOCATION_ERROR))
+        Mockito.verify(mockedStore).dispatch(LatestRateErrorAction(LocationStatus.LOCATION_ERROR))
     }
 
     @Test
@@ -194,7 +194,7 @@ class LocationMiddlewareTest {
         underTest.invoke(mockedStore, GetLocationAction(mockedLocation), mockedDispatchFunction)
 
         //THEN
-        Mockito.verify(mockedStore).dispatch(LatestRateErrorAction(LatestRateStatus.LOCATION_ERROR))
+        Mockito.verify(mockedStore).dispatch(LatestRateErrorAction(LocationStatus.LOCATION_ERROR))
     }
 
     @Test
@@ -208,7 +208,7 @@ class LocationMiddlewareTest {
         underTest.invoke(mockedStore, GetLocationAction(mockedLocation), mockedDispatchFunction)
 
         //THEN
-        Mockito.verify(mockedStore).dispatch(LatestRateErrorAction(LatestRateStatus.NOT_VALID_COUNTRY_CODE))
+        Mockito.verify(mockedStore).dispatch(LatestRateErrorAction(LocationStatus.NOT_VALID_COUNTRY_CODE))
     }
 
     @Test

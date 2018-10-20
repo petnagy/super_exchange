@@ -4,7 +4,6 @@ import com.petnagy.superexchange.data.HistoryRate
 import com.petnagy.superexchange.data.LatestRate
 import com.petnagy.superexchange.pages.fragments.currentrate.viewmodel.CurrentRateItemViewModel
 import com.petnagy.superexchange.pages.fragments.history.viewmodel.HistoryItemViewModel
-import timber.log.Timber
 import java.math.BigDecimal
 import java.math.RoundingMode
 

@@ -8,10 +8,8 @@ import com.petnagy.koredux.StoreSubscriber
 import com.petnagy.superexchange.convert.RateConverter
 import com.petnagy.superexchange.data.Currency
 import com.petnagy.superexchange.extensions.default
-import com.petnagy.superexchange.pages.fragments.currentrate.viewmodel.CurrentRateItemViewModel
 import com.petnagy.superexchange.redux.action.BaseCurrencyChangedAction
 import com.petnagy.superexchange.redux.action.LoadHistoryAction
-import com.petnagy.superexchange.redux.action.SetBaseCurrencyAction
 import com.petnagy.superexchange.redux.state.AppState
 import com.petnagy.superexchange.redux.state.FragmentState
 import timber.log.Timber

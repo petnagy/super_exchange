@@ -3,9 +3,9 @@ package com.petnagy.superexchange.redux.middleware
 import com.nhaarman.mockitokotlin2.mock
 import com.petnagy.koredux.DispatchFunction
 import com.petnagy.koredux.Store
+import com.petnagy.superexchange.RxImmediateSchedulerRule
 import com.petnagy.superexchange.data.Currency
 import com.petnagy.superexchange.data.LatestRate
-import com.petnagy.superexchange.RxImmediateSchedulerRule
 import com.petnagy.superexchange.redux.action.CalculateRatesAction
 import com.petnagy.superexchange.redux.action.NetworkErrorAction
 import com.petnagy.superexchange.redux.action.SetBaseCurrencyAction
@@ -14,15 +14,12 @@ import com.petnagy.superexchange.redux.state.AppState
 import com.petnagy.superexchange.repository.LatestRateSpecification
 import com.petnagy.superexchange.repository.Repository
 import io.reactivex.Maybe
-import org.junit.Assert
 import org.junit.Before
 import org.junit.ClassRule
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.ArgumentCaptor
 import org.mockito.Mockito
 import org.mockito.junit.MockitoJUnitRunner
-import java.lang.RuntimeException
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -38,7 +35,8 @@ class LatestRateMiddlewareTest {
     private lateinit var mockedDispatch: DispatchFunction
 
     companion object {
-        @ClassRule @JvmField
+        @ClassRule
+        @JvmField
         val schedulers = RxImmediateSchedulerRule()
     }
 
