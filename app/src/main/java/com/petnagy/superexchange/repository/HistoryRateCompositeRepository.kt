@@ -8,14 +8,18 @@ import timber.log.Timber
 /***
  * Composite repository, it is using network and room repository at the case of HistoryRate.
  */
-class HistoryRateCompositeRepository(private val networkRepo: HistoryRateNetworkRepository, private val roomRepo: HistoryRateRoomRepository) : Repository<HistoryRate> {
+class HistoryRateCompositeRepository(
+    private val networkRepo: HistoryRateNetworkRepository,
+    private val roomRepo: HistoryRateRoomRepository
+) : Repository<HistoryRate> {
 
     override fun load(specification: Specification): Maybe<HistoryRate> {
         return if (specification !is HistoryRateSpecification) {
             Maybe.error(IllegalArgumentException("Wrong specification"))
         } else {
             roomRepo.load(specification).doOnSuccess { Timber.d("Load from cache") }
-                    .switchIfEmpty(networkRepo.load(specification).doAfterSuccess { latestRate -> roomRepo.save(latestRate).subscribe() })
+                    .switchIfEmpty(networkRepo.load(specification)
+                            .doAfterSuccess { latestRate -> roomRepo.save(latestRate).subscribe() })
         }
     }
 

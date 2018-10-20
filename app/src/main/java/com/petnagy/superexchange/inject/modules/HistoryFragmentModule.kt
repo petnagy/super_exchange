@@ -14,5 +14,8 @@ class HistoryFragmentModule {
     internal fun provideRateConverter() = RateConverter()
 
     @Provides
-    internal fun provideHistoryViewModelFactory(store: Store<AppState>, rateConverter: RateConverter): HistoryViewModelFactory = HistoryViewModelFactory(store, rateConverter)
+    internal fun provideHistoryViewModelFactory(
+        store: Store<AppState>,
+        rateConverter: RateConverter
+    ): HistoryViewModelFactory = HistoryViewModelFactory(store, rateConverter)
 }

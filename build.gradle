@@ -15,6 +15,22 @@ buildscript {
     }
 }
 
+plugins {
+    id "io.gitlab.arturbosch.detekt" version "1.0.0.RC6-3"
+}
+
+detekt {
+    version = "1.0.0.RC6-3"
+    profile("main") {
+        input = "$projectDir/app/src/main/java"
+        config = "$projectDir/default-detekt-config.yml"
+        filters = ".*test.*,.*/resources/.*,.*/tmp/.*"
+        output = "${project.buildDir}/reports/detekt.xml"
+        parallel = true
+        disableDefaultRuleSets = false
+    }
+}
+
 allprojects {
     repositories {
         google()

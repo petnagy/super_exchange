@@ -19,7 +19,10 @@ import javax.inject.Singleton
  * Dagger component for Application.
  */
 @Singleton
-@Component(modules = [(AndroidSupportInjectionModule::class), (DaggerApplicationModule::class), (DaggerActivityModule::class), (DaggerFragmentModule::class)])
+@Component(modules = [(AndroidSupportInjectionModule::class),
+    (DaggerApplicationModule::class),
+    (DaggerActivityModule::class),
+    (DaggerFragmentModule::class)])
 interface ApplicationComponent : AndroidInjector<SuperExchange> {
 
     @Component.Builder

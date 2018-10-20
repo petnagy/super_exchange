@@ -22,6 +22,11 @@ import java.util.Calendar
 
 class HistoryMiddleware(private val historyRateRepo: Repository<HistoryRate>) : Middleware<AppState> {
 
+    companion object {
+        private const val DAY_OF_START = 1
+        private const val DAYS_IN_PAST = 7
+    }
+
     override fun invoke(store: Store<AppState>, action: Action, next: DispatchFunction) {
         when (action) {
             is LoadHistoryAction -> loadFromNet(store)
@@ -31,7 +36,7 @@ class HistoryMiddleware(private val historyRateRepo: Repository<HistoryRate>) : 
 
     @SuppressLint("CheckResult")
     private fun loadFromNet(store: Store<AppState>) {
-        Observable.range(1, 7)
+        Observable.range(DAY_OF_START, DAYS_IN_PAST)
                 .map { day -> createDate(day) }
                 .flatMap { date -> historyRateRepo.load(HistoryRateSpecification(Currency.values().joinToString(","), "EUR", date)).toObservable() }
                 .toList()

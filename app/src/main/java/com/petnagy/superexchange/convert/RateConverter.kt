@@ -12,11 +12,15 @@ import java.math.RoundingMode
  */
 class RateConverter {
 
+    companion object {
+        private const val SCALE = 6
+    }
+
     fun convertLatestRate(latestRate: LatestRate, baseCurrency: String, amount: Int): List<CurrentRateItemViewModel> {
         val baseRate = latestRate.rates[baseCurrency]
         return if (baseRate != null) {
             val convertedMap = latestRate.rates.mapValues { entry ->
-                entry.value.divide(baseRate, 6, RoundingMode.CEILING)
+                entry.value.divide(baseRate, SCALE, RoundingMode.CEILING)
             }
             convertedMap.map { entry -> CurrentRateItemViewModel(entry.key, entry.value * BigDecimal(amount)) }.toList()
         } else {
@@ -33,12 +37,13 @@ class RateConverter {
         val baseRate = historyRate.rates[baseCurrency]
         val convertedMap = if (baseRate != null) {
             historyRate.rates.mapValues { entry ->
-                entry.value.divide(baseRate, 6, RoundingMode.CEILING)
+                entry.value.divide(baseRate, SCALE, RoundingMode.CEILING)
             }
         } else {
             emptyMap<String, BigDecimal>()
         }
-        val convertedMapAsString = convertedMap.map { entry -> entry.key + " " + entry.value.toString() }.joinToString("\n")
+        val convertedMapAsString = convertedMap.map { entry -> entry.key + " " + entry.value.toString() }
+                .joinToString("\n")
         return HistoryItemViewModel(date, convertedMapAsString)
     }
 }

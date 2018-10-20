@@ -33,12 +33,17 @@ class LocationMiddleware(
     private val addressProvider: AddressProvider
 ) : Middleware<AppState> {
 
+    companion object {
+        private const val INTERVAL_VALUE: Long = 5000
+        private const val NUMBER_OF_UPDATES = 1
+    }
+
     private val locationRequest = LocationRequest()
 
     init {
         locationRequest.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
-        locationRequest.interval = 5000
-        locationRequest.numUpdates = 1
+        locationRequest.interval = INTERVAL_VALUE
+        locationRequest.numUpdates = NUMBER_OF_UPDATES
     }
 
     override fun invoke(store: Store<AppState>, action: Action, next: DispatchFunction) {

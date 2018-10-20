@@ -11,7 +11,6 @@ import com.petnagy.superexchange.recyclerview.SpaceItemDecorator
 /***
  * RecyclerView realted binding adapters, to use it in view.
  */
-
 @BindingAdapter("source")
 fun setupRecyclerViewSource(recyclerView: RecyclerView, source: List<ListItemViewModel>) {
     getAdapter(recyclerView).items = source.toMutableList()
@@ -28,7 +27,8 @@ private fun getAdapter(recyclerView: RecyclerView): RecyclerViewAdapter {
         recyclerView.layoutManager = GridLayoutManager(recyclerView.context, 1)
         adapter = RecyclerViewAdapter()
         recyclerView.adapter = adapter
-        recyclerView.addItemDecoration(SpaceItemDecorator(8))
+        val space = 8
+        recyclerView.addItemDecoration(SpaceItemDecorator(space))
     }
     return adapter
 }

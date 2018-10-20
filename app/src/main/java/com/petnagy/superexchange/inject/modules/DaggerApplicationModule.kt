@@ -52,10 +52,11 @@ class DaggerApplicationModule {
 
     @Provides
     @Singleton
-    fun provideStore(locationMiddleware: LocationMiddleware, latestRateMiddleware: LatestRateMiddleware, historyMiddleware: HistoryMiddleware): Store<AppState> =
-            Store(AppReducer(),
-                    listOf(LoggingMiddleware(), locationMiddleware, latestRateMiddleware, historyMiddleware),
-                    AppState(latestRateState = LatestRateState(), historyRateState = HistoryRateState()))
+    fun provideStore(
+        locationMiddleware: LocationMiddleware,
+        latestRateMiddleware: LatestRateMiddleware,
+        historyMiddleware: HistoryMiddleware
+    ): Store<AppState> = Store(AppReducer(), listOf(LoggingMiddleware(), locationMiddleware, latestRateMiddleware, historyMiddleware), AppState(latestRateState = LatestRateState(), historyRateState = HistoryRateState()))
 
     @Provides
     @Singleton
