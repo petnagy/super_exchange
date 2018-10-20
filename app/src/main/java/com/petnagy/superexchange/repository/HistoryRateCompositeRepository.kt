@@ -20,7 +20,7 @@ class HistoryRateCompositeRepository(private val networkRepo: HistoryRateNetwork
     }
 
     override fun save(item: HistoryRate): Completable {
-        //Do not call it
+        // Do not call it
         return Completable.never()
     }
 }

@@ -20,7 +20,7 @@ class LatestRateCompositeRepository(private val networkRepo: LatestRateNetworkRe
     }
 
     override fun save(item: LatestRate): Completable {
-        //Do not call it
+        // Do not call it
         return Completable.never()
     }
 }

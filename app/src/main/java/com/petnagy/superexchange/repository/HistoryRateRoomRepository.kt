@@ -24,5 +24,4 @@ class HistoryRateRoomRepository(private val historyRateDao: HistoryRateDao) : Re
         Timber.d("HistoryRate save into room baseCurrency = ${item.base}, date = ${item.date}")
         return Completable.fromAction { historyRateDao.insert(item) }.doOnError { error -> Timber.e(error) }
     }
-
 }

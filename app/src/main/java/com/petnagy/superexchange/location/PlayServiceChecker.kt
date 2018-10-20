@@ -16,5 +16,4 @@ class PlayServiceChecker(private val context: Context) {
         val resultCode = googleApiAvailability.isGooglePlayServicesAvailable(context)
         return resultCode == ConnectionResult.SUCCESS
     }
-
 }

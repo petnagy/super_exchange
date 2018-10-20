@@ -56,172 +56,172 @@ class LocationMiddlewareTest {
 
     @Test
     fun testStartLocationSearchAction_And_PermissionDenied() {
-        //GIVEN
+        // GIVEN
 
-        //WHEN
+        // WHEN
         underTest.invoke(mockedStore, StartLocationSearchAction(PermissionStatus.PERMISSION_DENIED), mockedDispatchFunction)
 
-        //THEN
+        // THEN
         Mockito.verify(mockedStore).dispatch(LatestRateErrorAction(LocationStatus.PERMISSION_DENIED))
     }
 
     @Test
     fun testStartLocationSearchAction_And_PermissionAskPermission() {
-        //GIVEN
+        // GIVEN
 
-        //WHEN
+        // WHEN
         underTest.invoke(mockedStore, StartLocationSearchAction(PermissionStatus.CAN_ASK_PERMISSION), mockedDispatchFunction)
 
-        //THEN
+        // THEN
         Mockito.verify(mockedStore).dispatch(LatestRateErrorAction(LocationStatus.PERMISSION_NEED))
     }
 
     @Test
     fun testStartLocationSearchAction_And_PermissionCheckSuccess() {
-        //GIVEN
+        // GIVEN
 
-        //WHEN
+        // WHEN
         underTest.invoke(mockedStore, StartLocationSearchAction(PermissionStatus.PERMISSION_GRANTED), mockedDispatchFunction)
 
-        //THEN
+        // THEN
         Mockito.verify(mockedStore).dispatch(CheckPlayServiceAction())
     }
 
     @Test
     fun testCheckPlayServiceAction_And_Failed() {
-        //GIVEN
+        // GIVEN
 
-        //WHEN
+        // WHEN
         Mockito.`when`(mockedPlayChecker.checkPlayService()).thenReturn(Single.error(RuntimeException()))
         underTest.invoke(mockedStore, CheckPlayServiceAction(), mockedDispatchFunction)
 
-        //THEN
+        // THEN
         Mockito.verify(mockedStore).dispatch(LatestRateErrorAction(LocationStatus.LOCATION_ERROR))
     }
 
     @Test
     fun testCheckPlayServiceAction_And_NoPlayService() {
-        //GIVEN
+        // GIVEN
 
-        //WHEN
+        // WHEN
         Mockito.`when`(mockedPlayChecker.checkPlayService()).thenReturn(Single.just(false))
         underTest.invoke(mockedStore, CheckPlayServiceAction(), mockedDispatchFunction)
 
-        //THEN
+        // THEN
         Mockito.verify(mockedStore).dispatch(LatestRateErrorAction(LocationStatus.PLAY_SERVICE_ERROR))
     }
 
     @Test
     fun testCheckPlayServiceAction_And_Success() {
-        //GIVEN
+        // GIVEN
 
-        //WHEN
+        // WHEN
         Mockito.`when`(mockedPlayChecker.checkPlayService()).thenReturn(Single.just(true))
         underTest.invoke(mockedStore, CheckPlayServiceAction(), mockedDispatchFunction)
 
-        //THEN
+        // THEN
         Mockito.verify(mockedStore).dispatch(CheckLocationSettingsAction())
     }
 
     @Test
     fun testCheckLocationSettingsAction_And_Failed() {
-        //GIVEN
+        // GIVEN
 
-        //WHEN
+        // WHEN
         Mockito.`when`(mockedSettingChecker.checkLocationSettings(any())).thenReturn(Single.error(RuntimeException()))
         underTest.invoke(mockedStore, CheckLocationSettingsAction(), mockedDispatchFunction)
 
-        //THEN
+        // THEN
         Mockito.verify(mockedStore).dispatch(LatestRateErrorAction(LocationStatus.LOCATION_ERROR))
     }
 
     @Test
     fun testCheckLocationSettingsAction_And_SettingsError() {
-        //GIVEN
+        // GIVEN
 
-        //WHEN
+        // WHEN
         Mockito.`when`(mockedSettingChecker.checkLocationSettings(any())).thenReturn(Single.just(false))
         underTest.invoke(mockedStore, CheckLocationSettingsAction(), mockedDispatchFunction)
 
-        //THEN
+        // THEN
         Mockito.verify(mockedStore).dispatch(LatestRateErrorAction(LocationStatus.SETTING_ERROR))
     }
 
     @Test
     fun testCheckLocationSettingsAction_And_Success() {
-        //GIVEN
+        // GIVEN
 
-        //WHEN
+        // WHEN
         Mockito.`when`(mockedSettingChecker.checkLocationSettings(any())).thenReturn(Single.just(true))
         underTest.invoke(mockedStore, CheckLocationSettingsAction(), mockedDispatchFunction)
 
-        //THEN
+        // THEN
         Mockito.verify(mockedStore).dispatch(RequestLocationAction())
     }
 
     @Test
     fun testRequestLocationAction_And_Failed() {
-        //GIVEN
+        // GIVEN
 
-        //WHEN
+        // WHEN
         Mockito.`when`(mockedLocationProvider.getLocation(any())).thenReturn(Observable.error(RuntimeException()))
         underTest.invoke(mockedStore, RequestLocationAction(), mockedDispatchFunction)
 
-        //THEN
+        // THEN
         Mockito.verify(mockedStore).dispatch(LatestRateErrorAction(LocationStatus.LOCATION_ERROR))
     }
 
     @Test
     fun testRequestLocationAction_And_Success() {
-        //GIVEN
+        // GIVEN
 
-        //WHEN
+        // WHEN
         val mockedLocation: Location = mock()
         Mockito.`when`(mockedLocationProvider.getLocation(any())).thenReturn(Observable.just(mockedLocation))
         underTest.invoke(mockedStore, RequestLocationAction(), mockedDispatchFunction)
 
-        //THEN
+        // THEN
         Mockito.verify(mockedStore).dispatch(GetLocationAction(mockedLocation))
     }
 
     @Test
     fun testGetLocationAction_And_Failed() {
-        //GIVEN
+        // GIVEN
 
-        //WHEN
+        // WHEN
         val mockedLocation: Location = mock()
         Mockito.`when`(mockedAddressProvider.getCountryCode(any())).thenReturn(Single.error(RuntimeException()))
         underTest.invoke(mockedStore, GetLocationAction(mockedLocation), mockedDispatchFunction)
 
-        //THEN
+        // THEN
         Mockito.verify(mockedStore).dispatch(LatestRateErrorAction(LocationStatus.LOCATION_ERROR))
     }
 
     @Test
     fun testGetLocationAction_And_Success_But_Not_Valid() {
-        //GIVEN
+        // GIVEN
 
-        //WHEN
+        // WHEN
         val countryCode = "countryCode"
         val mockedLocation: Location = mock()
         Mockito.`when`(mockedAddressProvider.getCountryCode(any())).thenReturn(Single.just(countryCode))
         underTest.invoke(mockedStore, GetLocationAction(mockedLocation), mockedDispatchFunction)
 
-        //THEN
+        // THEN
         Mockito.verify(mockedStore).dispatch(LatestRateErrorAction(LocationStatus.NOT_VALID_COUNTRY_CODE))
     }
 
     @Test
     fun testGetLocationAction_And_Success() {
-        //GIVEN
+        // GIVEN
 
-        //WHEN
+        // WHEN
         val countryCode = "HU"
         val mockedLocation: Location = mock()
         Mockito.`when`(mockedAddressProvider.getCountryCode(any())).thenReturn(Single.just(countryCode))
         underTest.invoke(mockedStore, GetLocationAction(mockedLocation), mockedDispatchFunction)
 
-        //THEN
+        // THEN
         Mockito.verify(mockedStore).dispatch(SetBaseCurrencyAction(Country.HU.currency))
     }
 }

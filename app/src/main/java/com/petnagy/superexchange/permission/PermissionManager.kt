@@ -17,5 +17,4 @@ class PermissionManager {
             else -> PermissionStatus.PERMISSION_DENIED
         }
     }
-
 }

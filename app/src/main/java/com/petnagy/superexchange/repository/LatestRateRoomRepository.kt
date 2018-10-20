@@ -31,5 +31,4 @@ class LatestRateRoomRepository(private val latestRateDao: LatestRateDao) : Repos
         Timber.d("Save into room baseCurrency = ${item.base}, date = ${item.date}")
         return Completable.fromAction { latestRateDao.insert(item) }.doOnError { error -> Timber.e(error) }
     }
-
 }

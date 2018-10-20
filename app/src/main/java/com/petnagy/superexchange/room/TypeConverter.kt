@@ -21,5 +21,4 @@ class TypeConverter {
         val turnsType = object : TypeToken<Map<String, BigDecimal>>() {}.type
         return Gson().fromJson<Map<String, BigDecimal>>(value, turnsType)
     }
-
 }

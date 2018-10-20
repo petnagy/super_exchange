@@ -15,14 +15,13 @@ class LatestRateNetworkRepository(private val endpoint: FixerIoEndpoint) : Repos
         return if (specification !is LatestRateSpecification) {
             Maybe.error(IllegalArgumentException("Wrong specification"))
         } else {
-            //Put your API key in your gradle.properties file in your home directory
+            // Put your API key in your gradle.properties file in your home directory
             endpoint.getCurrentRate(specification.symbols, BuildConfig.ApiKey).toMaybe()
         }
     }
 
     override fun save(item: LatestRate): Completable {
-        //It will not used
+        // It will not used
         return Completable.never()
     }
-
 }

@@ -25,21 +25,21 @@ class RateConverterTest {
 
     @Test
     fun testRateConverterWhenUserSelectedCurrencyNotAvailable() {
-        //GIVEN
-        //WHEN
+        // GIVEN
+        // WHEN
         val result = underTest.convertLatestRate(latestRate, "WUT", 1)
 
-        //THEN
+        // THEN
         Assert.assertEquals(result.size, 0)
     }
 
     @Test
     fun testRateConverterWhenUserSelectedCurrencySameAsOriginal() {
-        //GIVEN
-        //WHEN
+        // GIVEN
+        // WHEN
         val result = underTest.convertLatestRate(latestRate, "EUR", 1)
 
-        //THEN
+        // THEN
         Assert.assertEquals(result.size, 3)
         val eurViewModel = result.find { itemViewModel -> itemViewModel.getCurrencyName() == "EUR" }
         val eurValue = BigDecimal(1).divide(BigDecimal(1), 6, RoundingMode.CEILING)
@@ -54,11 +54,11 @@ class RateConverterTest {
 
     @Test
     fun testRateConverterWhenUserSelectedCurrencyDifferentAsOriginal() {
-        //GIVEN
-        //WHEN
+        // GIVEN
+        // WHEN
         val result = underTest.convertLatestRate(latestRate, "HUF", 1)
 
-        //THEN
+        // THEN
         Assert.assertEquals(result.size, 3)
         val eurViewModel = result.find { itemViewModel -> itemViewModel.getCurrencyName() == "EUR" }
         val eurValue = BigDecimal(1).divide(BigDecimal(320), 6, RoundingMode.CEILING)
@@ -73,11 +73,11 @@ class RateConverterTest {
 
     @Test
     fun testRateConverterWhenUserAddAnAmount() {
-        //GIVEN
-        //WHEN
+        // GIVEN
+        // WHEN
         val result = underTest.convertLatestRate(latestRate, "HUF", 112)
 
-        //THEN
+        // THEN
         Assert.assertEquals(result.size, 3)
         val eurViewModel = result.find { itemViewModel -> itemViewModel.getCurrencyName() == "EUR" }
         val eurValue = BigDecimal(1).divide(BigDecimal(320), 6, RoundingMode.CEILING) * BigDecimal(112)
@@ -89,5 +89,4 @@ class RateConverterTest {
         val usdValue = BigDecimal(1.1).divide(BigDecimal(320), 6, RoundingMode.CEILING) * BigDecimal(112)
         Assert.assertEquals(usdViewModel?.getActualRate(), usdValue.toString())
     }
-
 }

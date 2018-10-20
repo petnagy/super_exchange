@@ -11,6 +11,6 @@ enum class Currency {
     CZK,
     EUR,
     HUF,
-    HRK, //Croatia, Kuna
-    GBP, //United Kingdom, Pounds
+    HRK, // Croatia, Kuna
+    GBP, // United Kingdom, Pounds
 }

@@ -50,59 +50,59 @@ class LatestRateMiddlewareTest {
 
     @Test
     fun testMiddlewareWith_SetBaseCurrencyAction_Success() {
-        //GIVEN
+        // GIVEN
         val symbols = Currency.values().joinToString(",")
         val date = SimpleDateFormat("yyyy-MM-dd").format(Date())
         val latestRate = LatestRate(true, 1, "EUR", date, emptyMap())
         Mockito.`when`(mockedRepository.load(LatestRateSpecification(symbols, "EUR", date))).thenReturn(Maybe.just(latestRate))
 
-        //WHEN
+        // WHEN
         underTest.invoke(mockedStore, SetBaseCurrencyAction(Currency.USD), mockedDispatch)
 
-        //THEN
+        // THEN
         Mockito.verify(mockedStore).dispatch(SetLatestRateAction(latestRate))
     }
 
     @Test
     fun testMiddlewareWith_SetBaseCurrencyAction_Failed() {
-        //GIVEN
+        // GIVEN
         val symbols = Currency.values().joinToString(",")
         val date = SimpleDateFormat("yyyy-MM-dd").format(Date())
         Mockito.`when`(mockedRepository.load(LatestRateSpecification(symbols, "EUR", date))).thenReturn(Maybe.error(RuntimeException()))
 
-        //WHEN
+        // WHEN
         underTest.invoke(mockedStore, SetBaseCurrencyAction(Currency.USD), mockedDispatch)
 
-        //THEN
+        // THEN
         Mockito.verify(mockedStore).dispatch(NetworkErrorAction())
     }
 
     @Test
     fun testMiddlewareWith_CalculateRatesAction_Success() {
-        //GIVEN
+        // GIVEN
         val symbols = Currency.values().joinToString(",")
         val date = SimpleDateFormat("yyyy-MM-dd").format(Date())
         val latestRate = LatestRate(true, 1, "EUR", date, emptyMap())
         Mockito.`when`(mockedRepository.load(LatestRateSpecification(symbols, "EUR", date))).thenReturn(Maybe.just(latestRate))
 
-        //WHEN
+        // WHEN
         underTest.invoke(mockedStore, CalculateRatesAction(10), mockedDispatch)
 
-        //THEN
+        // THEN
         Mockito.verify(mockedStore).dispatch(SetLatestRateAction(latestRate))
     }
 
     @Test
     fun testMiddlewareWith_CalculateRatesAction_Failed() {
-        //GIVEN
+        // GIVEN
         val symbols = Currency.values().joinToString(",")
         val date = SimpleDateFormat("yyyy-MM-dd").format(Date())
         Mockito.`when`(mockedRepository.load(LatestRateSpecification(symbols, "EUR", date))).thenReturn(Maybe.error(RuntimeException()))
 
-        //WHEN
+        // WHEN
         underTest.invoke(mockedStore, CalculateRatesAction(10), mockedDispatch)
 
-        //THEN
+        // THEN
         Mockito.verify(mockedStore).dispatch(NetworkErrorAction())
     }
 }

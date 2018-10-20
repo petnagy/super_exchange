@@ -16,8 +16,12 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import timber.log.Timber
 
-class LocationMiddleware(private val playServiceChecker: PlayServiceChecker, private val locationSettingChecker: LocationSettingChecker,
-                         private val locationProvider: LocationProvider, private val addressProvider: AddressProvider): Middleware<AppState> {
+class LocationMiddleware(
+    private val playServiceChecker: PlayServiceChecker,
+    private val locationSettingChecker: LocationSettingChecker,
+    private val locationProvider: LocationProvider,
+    private val addressProvider: AddressProvider
+) : Middleware<AppState> {
 
     private val locationRequest = LocationRequest()
 
@@ -28,7 +32,7 @@ class LocationMiddleware(private val playServiceChecker: PlayServiceChecker, pri
     }
 
     override fun invoke(store: Store<AppState>, action: Action, next: DispatchFunction) {
-        when(action) {
+        when (action) {
             is StartLocationSearchAction -> checkPermission(store, action.permissionStatus)
             is CheckPlayServiceAction -> checkPlayService(store)
             is CheckLocationSettingsAction -> checkLocationSettings(store)
@@ -39,7 +43,7 @@ class LocationMiddleware(private val playServiceChecker: PlayServiceChecker, pri
     }
 
     private fun checkPermission(store: Store<AppState>, permissionStatus: PermissionStatus) {
-        when(permissionStatus) {
+        when (permissionStatus) {
             PermissionStatus.PERMISSION_GRANTED -> store.dispatch(CheckPlayServiceAction())
             PermissionStatus.CAN_ASK_PERMISSION -> store.dispatch(LatestRateErrorAction(LocationStatus.PERMISSION_NEED))
             PermissionStatus.PERMISSION_DENIED -> store.dispatch(LatestRateErrorAction(LocationStatus.PERMISSION_DENIED))
@@ -52,7 +56,7 @@ class LocationMiddleware(private val playServiceChecker: PlayServiceChecker, pri
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
-                        { success -> handlePlayCheck(store, success)} ,
+                        { success -> handlePlayCheck(store, success) },
                         { error -> handleError(store, error) }
                 )
     }
@@ -76,8 +80,8 @@ class LocationMiddleware(private val playServiceChecker: PlayServiceChecker, pri
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
-                        { success -> handleLocationSettings(store, success)} ,
-                        { error -> handleError(store, error)}
+                        { success -> handleLocationSettings(store, success) },
+                        { error -> handleError(store, error) }
                 )
     }
 
@@ -95,8 +99,8 @@ class LocationMiddleware(private val playServiceChecker: PlayServiceChecker, pri
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
-                        { location -> store.dispatch(GetLocationAction(location))} ,
-                        { error -> handleError(store, error)}
+                        { location -> store.dispatch(GetLocationAction(location)) },
+                        { error -> handleError(store, error) }
                 )
     }
 
@@ -106,8 +110,8 @@ class LocationMiddleware(private val playServiceChecker: PlayServiceChecker, pri
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
-                        { countryCode -> handleCountryCode(store, countryCode)} ,
-                        { error -> handleError(store, error)}
+                        { countryCode -> handleCountryCode(store, countryCode) },
+                        { error -> handleError(store, error) }
                 )
     }
 

@@ -42,7 +42,7 @@ class CurrentRateViewModel(private val store: Store<AppState>, private val rateC
         } else {
             rates.value = emptyList()
         }
-        //If Fragment changed unsubscribe from it.
+        // If Fragment changed unsubscribe from it.
         if (state.fragmentState != FragmentState.LATEST_RATE) {
             store.unsubscribe(this)
         }
@@ -67,7 +67,7 @@ class CurrentRateViewModel(private val store: Store<AppState>, private val rateC
 
     fun getSelectedListener() = object : AdapterView.OnItemSelectedListener {
         override fun onNothingSelected(parent: AdapterView<*>?) {
-            //Do nothing
+            // Do nothing
         }
 
         override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {

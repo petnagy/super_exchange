@@ -15,14 +15,13 @@ class HistoryRateNetworkRepository(private val endpoint: FixerIoEndpoint) : Repo
         return if (specification !is HistoryRateSpecification) {
             Maybe.error(IllegalArgumentException("Wrong specification"))
         } else {
-            //Put your API key in your gradle.properties file in your home directory
+            // Put your API key in your gradle.properties file in your home directory
             endpoint.getHistoryRate(specification.date, specification.symbols, BuildConfig.ApiKey).toMaybe()
         }
     }
 
     override fun save(item: HistoryRate): Completable {
-        //It will not used
+        // It will not used
         return Completable.never()
     }
-
 }

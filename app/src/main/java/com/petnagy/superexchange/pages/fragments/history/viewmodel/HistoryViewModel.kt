@@ -36,7 +36,7 @@ class HistoryViewModel(private val store: Store<AppState>, private val rateConve
 
     fun getSelectedListener() = object : AdapterView.OnItemSelectedListener {
         override fun onNothingSelected(parent: AdapterView<*>?) {
-            //Do nothing
+            // Do nothing
         }
 
         override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
@@ -53,10 +53,9 @@ class HistoryViewModel(private val store: Store<AppState>, private val rateConve
         } else {
             rates.value = emptyList()
         }
-        //Unsubscribe if current fragment is not HistoryRate...
+        // Unsubscribe if current fragment is not HistoryRate...
         if (state.fragmentState != FragmentState.HISTORY) {
             store.unsubscribe(this)
         }
     }
-
 }

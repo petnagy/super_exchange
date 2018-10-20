@@ -17,5 +17,4 @@ class CurrentRateViewModelFactory constructor(private val store: Store<AppState>
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }
-
 }

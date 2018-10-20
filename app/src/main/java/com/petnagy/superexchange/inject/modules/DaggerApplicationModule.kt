@@ -54,8 +54,12 @@ class DaggerApplicationModule {
 
     @Provides
     @Singleton
-    fun provideLocationMiddleware(playServiceChecker: PlayServiceChecker, locationSettingChecker: LocationSettingChecker,
-                                  locationProvider: LocationProvider, addressProvider: AddressProvider): LocationMiddleware {
+    fun provideLocationMiddleware(
+        playServiceChecker: PlayServiceChecker,
+        locationSettingChecker: LocationSettingChecker,
+        locationProvider: LocationProvider,
+        addressProvider: AddressProvider
+    ): LocationMiddleware {
         return LocationMiddleware(playServiceChecker, locationSettingChecker, locationProvider, addressProvider)
     }
 

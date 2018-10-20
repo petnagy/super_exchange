@@ -58,5 +58,4 @@ class HistoryMiddleware(private val historyRateRepo: Repository<HistoryRate>) : 
         calendar.add(Calendar.DAY_OF_YEAR, day * -1)
         return SimpleDateFormat("yyyy-MM-dd").format(calendar.time)
     }
-
 }

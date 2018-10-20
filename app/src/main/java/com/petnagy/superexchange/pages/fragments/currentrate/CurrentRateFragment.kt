@@ -47,7 +47,7 @@ class CurrentRateFragment : DaggerFragment() {
                 LocationStatus.NETWORK_ERROR -> showNetworkErrorDialog()
                 LocationStatus.NOT_VALID_COUNTRY_CODE -> showNotValidCountryCodeDialog()
                 else -> {
-                    //DO nothing
+                    // DO nothing
                 }
             }
         })
@@ -78,32 +78,26 @@ class CurrentRateFragment : DaggerFragment() {
     }
 
     private fun showPermissionNeedDialog() {
-
     }
 
     private fun showPlayServiceErrorDialog() {
-
     }
 
     private fun showSettingsErrorDialog() {
-
     }
 
     private fun showLocationErrorDialog() {
-
     }
 
     private fun showNetworkErrorDialog() {
-
     }
 
     private fun showNotValidCountryCodeDialog() {
-
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        when(requestCode) {
+        when (requestCode) {
             REQUEST_CODE_FINE_LOCATION -> checkPermission()
         }
         viewModel.start()
@@ -116,6 +110,5 @@ class CurrentRateFragment : DaggerFragment() {
         fun newInstance(): Fragment {
             return CurrentRateFragment()
         }
-
     }
 }

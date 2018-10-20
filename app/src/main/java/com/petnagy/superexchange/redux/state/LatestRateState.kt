@@ -4,7 +4,6 @@ import com.petnagy.superexchange.data.Currency
 import com.petnagy.superexchange.data.LatestRate
 import com.petnagy.superexchange.location.LocationStatus
 
-
 /***
  * Latest Rate View State.
  */

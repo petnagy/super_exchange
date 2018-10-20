@@ -17,5 +17,4 @@ interface FixerIoEndpoint {
 
     @GET("/{date}")
     fun getHistoryRate(@Path("date") dateValue: String, @Query("symbols") symbols: String, @Query("access_key") apiKey: String): Single<HistoryRate>
-
 }

@@ -9,5 +9,4 @@ class AddressProvider(private val rxLocation: RxLocation) {
     fun getCountryCode(location: Location): Single<String> {
         return rxLocation.geocoding().fromLocation(location).toSingle().map { address -> address.countryCode }
     }
-
 }

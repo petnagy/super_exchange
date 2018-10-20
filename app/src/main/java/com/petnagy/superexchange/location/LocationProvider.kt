@@ -12,5 +12,4 @@ class LocationProvider(private val rxLocation: RxLocation) {
     fun getLocation(locationRequest: LocationRequest): Observable<Location> {
         return rxLocation.location().updates(locationRequest)
     }
-
 }

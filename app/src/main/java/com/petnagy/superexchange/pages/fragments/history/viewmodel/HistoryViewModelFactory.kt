@@ -14,5 +14,4 @@ class HistoryViewModelFactory constructor(private val store: Store<AppState>, pr
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }
-
 }

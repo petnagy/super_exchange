@@ -50,5 +50,4 @@ interface HistoryRateDao {
 
     @Query("SELECT * FROM history_rate WHERE base = :baseCurrency AND date = :date")
     fun query(baseCurrency: String, date: String): Maybe<HistoryRate>
-
 }

@@ -18,5 +18,4 @@ class LoggingMiddleware : Middleware<AppState> {
         Timber.d(log)
         next.dispatch(action)
     }
-
 }

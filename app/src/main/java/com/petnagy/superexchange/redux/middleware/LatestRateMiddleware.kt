@@ -33,7 +33,7 @@ class LatestRateMiddleware(private val repository: Repository<LatestRate>) : Mid
     @SuppressLint("CheckResult")
     private fun queryLatestRate(store: Store<AppState>) {
         val symbols = Currency.values().joinToString(",")
-        //Because of free plan supported only EUR currency like a base currency
+        // Because of free plan supported only EUR currency like a base currency
         val baseCurrency = "EUR"
         val date = SimpleDateFormat("yyyy-MM-dd").format(Date())
         repository.load(LatestRateSpecification(symbols = symbols, base = baseCurrency, date = date))
@@ -49,5 +49,4 @@ class LatestRateMiddleware(private val repository: Repository<LatestRate>) : Mid
         Timber.e(error, "Something went wrong in Network call")
         store.dispatch(NetworkErrorAction())
     }
-
 }
