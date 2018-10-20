@@ -4,7 +4,12 @@ import com.petnagy.superexchange.data.Currency
 import com.petnagy.superexchange.data.LatestRate
 import com.petnagy.superexchange.location.LocationStatus
 import com.petnagy.superexchange.permission.PermissionStatus
-import com.petnagy.superexchange.redux.action.*
+import com.petnagy.superexchange.redux.action.CalculateRatesAction
+import com.petnagy.superexchange.redux.action.LatestRateErrorAction
+import com.petnagy.superexchange.redux.action.NetworkErrorAction
+import com.petnagy.superexchange.redux.action.SetBaseCurrencyAction
+import com.petnagy.superexchange.redux.action.SetLatestRateAction
+import com.petnagy.superexchange.redux.action.StartLocationSearchAction
 import com.petnagy.superexchange.redux.state.AppState
 import com.petnagy.superexchange.redux.state.HistoryRateState
 import com.petnagy.superexchange.redux.state.LatestRateState

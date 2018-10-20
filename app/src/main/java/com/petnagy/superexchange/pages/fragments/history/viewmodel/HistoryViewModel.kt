@@ -1,6 +1,10 @@
 package com.petnagy.superexchange.pages.fragments.history.viewmodel
 
-import android.arch.lifecycle.*
+import android.arch.lifecycle.Lifecycle
+import android.arch.lifecycle.LifecycleObserver
+import android.arch.lifecycle.MutableLiveData
+import android.arch.lifecycle.OnLifecycleEvent
+import android.arch.lifecycle.ViewModel
 import android.view.View
 import android.widget.AdapterView
 import com.petnagy.koredux.Store

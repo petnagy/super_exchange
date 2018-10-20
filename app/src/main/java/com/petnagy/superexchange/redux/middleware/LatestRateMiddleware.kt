@@ -18,7 +18,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import timber.log.Timber
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Date
 
 class LatestRateMiddleware(private val repository: Repository<LatestRate>) : Middleware<AppState> {
 

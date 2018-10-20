@@ -21,7 +21,7 @@ import org.junit.runner.RunWith
 import org.mockito.Mockito
 import org.mockito.junit.MockitoJUnitRunner
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Date
 
 @RunWith(MockitoJUnitRunner::class)
 class LatestRateMiddlewareTest {

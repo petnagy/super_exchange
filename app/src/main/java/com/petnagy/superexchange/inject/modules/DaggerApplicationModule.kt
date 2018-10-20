@@ -21,7 +21,12 @@ import com.petnagy.superexchange.redux.reducer.AppReducer
 import com.petnagy.superexchange.redux.state.AppState
 import com.petnagy.superexchange.redux.state.HistoryRateState
 import com.petnagy.superexchange.redux.state.LatestRateState
-import com.petnagy.superexchange.repository.*
+import com.petnagy.superexchange.repository.HistoryRateCompositeRepository
+import com.petnagy.superexchange.repository.HistoryRateNetworkRepository
+import com.petnagy.superexchange.repository.HistoryRateRoomRepository
+import com.petnagy.superexchange.repository.LatestRateCompositeRepository
+import com.petnagy.superexchange.repository.LatestRateNetworkRepository
+import com.petnagy.superexchange.repository.LatestRateRoomRepository
 import com.petnagy.superexchange.room.AppDatabase
 import com.petnagy.superexchange.room.HistoryRateDao
 import com.petnagy.superexchange.room.LatestRateDao
