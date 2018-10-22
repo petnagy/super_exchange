@@ -20,6 +20,7 @@ import com.petnagy.superexchange.redux.action.SetBaseCurrencyAction
 import com.petnagy.superexchange.redux.action.StartLocationSearchAction
 import com.petnagy.superexchange.redux.state.AppState
 import com.petnagy.superexchange.redux.state.FragmentState
+import com.petnagy.superexchange.redux.state.LatestRateState
 import timber.log.Timber
 
 /***
@@ -37,14 +38,16 @@ class CurrentRateViewModel(private val store: Store<AppState>, private val rateC
     val locationIsReady: MutableLiveData<Boolean> = MutableLiveData<Boolean>().default(false)
 
     override fun newState(state: AppState) {
-        loading.value = state.latestRateState.loading
-        if (baseCurrencyEmptyOrChanged(state)) {
-            baseCurrency.value = state.latestRateState.baseCurrency?.name
+        val latestRateState = state.latestRateState
+        loading.value = latestRateState.loading
+        if (baseCurrencyEmptyOrChanged(latestRateState)) {
+            baseCurrency.value = latestRateState.baseCurrency?.name
         }
-        amount.value = state.latestRateState.amount
-        status.value = state.latestRateState.status
-        if (state.latestRateState.latestRate != null && state.latestRateState.baseCurrency != null) {
-            rates.value = rateConverter.convertLatestRate(state.latestRateState.latestRate, state.latestRateState.baseCurrency.name, state.latestRateState.amount)
+        amount.value = latestRateState.amount
+        status.value = latestRateState.status
+        if (latestRateState.latestRate != null && latestRateState.baseCurrency != null) {
+            val convertedLatestRate = rateConverter.convertLatestRate(latestRateState.latestRate, latestRateState.baseCurrency.name, latestRateState.amount)
+            rates.value = convertedLatestRate.rates.map { entry -> CurrentRateItemViewModel(entry.key, entry.value) }.toList()
         } else {
             rates.value = emptyList()
         }
@@ -55,8 +58,8 @@ class CurrentRateViewModel(private val store: Store<AppState>, private val rateC
         }
     }
 
-    private fun baseCurrencyEmptyOrChanged(state: AppState) =
-            baseCurrency.value == null || baseCurrency.value != state.latestRateState.baseCurrency?.name
+    private fun baseCurrencyEmptyOrChanged(state: LatestRateState) =
+            baseCurrency.value == null || baseCurrency.value != state.baseCurrency?.name
 
     @OnLifecycleEvent(Lifecycle.Event.ON_START)
     fun start() {

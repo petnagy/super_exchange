@@ -16,20 +16,24 @@ class RateConverter {
         private const val SCALE = 6
     }
 
-    fun convertLatestRate(latestRate: LatestRate, baseCurrency: String, amount: Int): List<CurrentRateItemViewModel> {
+    fun convertLatestRate(latestRate: LatestRate, baseCurrency: String, amount: Int): LatestRate {
         val baseRate = latestRate.rates[baseCurrency]
-        return if (baseRate != null) {
-            val convertedMap = latestRate.rates.mapValues { entry ->
-                entry.value.divide(baseRate, SCALE, RoundingMode.CEILING)
+        val convertedMap: Map<String, BigDecimal> = if (baseRate != null) {
+            latestRate.rates.mapValues { entry ->
+                convertLatestRateItem(entry.value, baseRate, amount)
             }
-            convertedMap.map { entry -> CurrentRateItemViewModel(entry.key, entry.value * BigDecimal(amount)) }.toList()
         } else {
-            emptyList()
+            emptyMap()
         }
+        return latestRate.copy(rates = convertedMap)
+    }
+
+    private fun convertLatestRateItem(entry: BigDecimal, baseRate: BigDecimal, amount: Int): BigDecimal {
+        return entry.divide(baseRate, SCALE, RoundingMode.CEILING) * BigDecimal(amount)
     }
 
     fun convertHistoryItems(rates: List<HistoryRate>, baseCurrency: String): List<HistoryItemViewModel> {
-        return rates.map { historyRate -> convertToHistoryItemViewModel(historyRate, baseCurrency) }.toList()
+        return rates.asSequence().map { historyRate -> convertToHistoryItemViewModel(historyRate, baseCurrency) }.toList()
     }
 
     private fun convertToHistoryItemViewModel(historyRate: HistoryRate, baseCurrency: String): HistoryItemViewModel {

@@ -30,7 +30,7 @@ class RateConverterTest {
         val result = underTest.convertLatestRate(latestRate, "WUT", 1)
 
         // THEN
-        Assert.assertEquals(result.size, 0)
+        Assert.assertEquals(result.rates.size, 0)
     }
 
     @Test
@@ -40,16 +40,13 @@ class RateConverterTest {
         val result = underTest.convertLatestRate(latestRate, "EUR", 1)
 
         // THEN
-        Assert.assertEquals(result.size, 3)
-        val eurViewModel = result.find { itemViewModel -> itemViewModel.getCurrencyName() == "EUR" }
+        Assert.assertEquals(result.rates.size, 3)
         val eurValue = BigDecimal(1).divide(BigDecimal(1), 6, RoundingMode.CEILING)
-        Assert.assertEquals(eurViewModel?.getActualRate(), eurValue.toString())
-        val hufViewModel = result.find { itemViewModel -> itemViewModel.getCurrencyName() == "HUF" }
+        Assert.assertEquals(result.rates["EUR"], eurValue)
         val hufValue = BigDecimal(320).divide(BigDecimal(1), 6, RoundingMode.CEILING)
-        Assert.assertEquals(hufViewModel?.getActualRate(), hufValue.toString())
-        val usdViewModel = result.find { itemViewModel -> itemViewModel.getCurrencyName() == "USD" }
+        Assert.assertEquals(result.rates["HUF"], hufValue)
         val usdValue = BigDecimal(1.1).divide(BigDecimal(1), 6, RoundingMode.CEILING)
-        Assert.assertEquals(usdViewModel?.getActualRate(), usdValue.toString())
+        Assert.assertEquals(result.rates["USD"], usdValue)
     }
 
     @Test
@@ -59,16 +56,13 @@ class RateConverterTest {
         val result = underTest.convertLatestRate(latestRate, "HUF", 1)
 
         // THEN
-        Assert.assertEquals(result.size, 3)
-        val eurViewModel = result.find { itemViewModel -> itemViewModel.getCurrencyName() == "EUR" }
+        Assert.assertEquals(result.rates.size, 3)
         val eurValue = BigDecimal(1).divide(BigDecimal(320), 6, RoundingMode.CEILING)
-        Assert.assertEquals(eurViewModel?.getActualRate(), eurValue.toString())
-        val hufViewModel = result.find { itemViewModel -> itemViewModel.getCurrencyName() == "HUF" }
+        Assert.assertEquals(result.rates["EUR"], eurValue)
         val hufValue = BigDecimal(320).divide(BigDecimal(320), 6, RoundingMode.CEILING)
-        Assert.assertEquals(hufViewModel?.getActualRate(), hufValue.toString())
-        val usdViewModel = result.find { itemViewModel -> itemViewModel.getCurrencyName() == "USD" }
+        Assert.assertEquals(result.rates["HUF"], hufValue)
         val usdValue = BigDecimal(1.1).divide(BigDecimal(320), 6, RoundingMode.CEILING)
-        Assert.assertEquals(usdViewModel?.getActualRate(), usdValue.toString())
+        Assert.assertEquals(result.rates["USD"], usdValue)
     }
 
     @Test
@@ -78,15 +72,12 @@ class RateConverterTest {
         val result = underTest.convertLatestRate(latestRate, "HUF", 112)
 
         // THEN
-        Assert.assertEquals(result.size, 3)
-        val eurViewModel = result.find { itemViewModel -> itemViewModel.getCurrencyName() == "EUR" }
+        Assert.assertEquals(result.rates.size, 3)
         val eurValue = BigDecimal(1).divide(BigDecimal(320), 6, RoundingMode.CEILING) * BigDecimal(112)
-        Assert.assertEquals(eurViewModel?.getActualRate(), eurValue.toString())
-        val hufViewModel = result.find { itemViewModel -> itemViewModel.getCurrencyName() == "HUF" }
+        Assert.assertEquals(result.rates["EUR"], eurValue)
         val hufValue = BigDecimal(320).divide(BigDecimal(320), 6, RoundingMode.CEILING) * BigDecimal(112)
-        Assert.assertEquals(hufViewModel?.getActualRate(), hufValue.toString())
-        val usdViewModel = result.find { itemViewModel -> itemViewModel.getCurrencyName() == "USD" }
+        Assert.assertEquals(result.rates["HUF"], hufValue)
         val usdValue = BigDecimal(1.1).divide(BigDecimal(320), 6, RoundingMode.CEILING) * BigDecimal(112)
-        Assert.assertEquals(usdViewModel?.getActualRate(), usdValue.toString())
+        Assert.assertEquals(result.rates["USD"], usdValue)
     }
 }
