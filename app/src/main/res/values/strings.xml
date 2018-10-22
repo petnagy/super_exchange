@@ -8,4 +8,18 @@
     <string name="current_rate_amount_label">Amount:</string>
     <string name="current_rate_calc_button_label">Calculate</string>
     <string name="history_base_currency_label">Base currency:</string>
+    <string name="location_permission_dialog_settings_button">Start Settings</string>
+    <string name="location_permission_dialog_message">Application need a permission to your location, because check the base currency</string>
+    <string name="dialog_cancel_button">Cancel</string>
+    <string name="dialog_no_play_service_title">Play Service is not available</string>
+    <string name="dialog_no_play_service_message">Play Service is not available on the device, please check the settings or Play Service</string>
+    <string name="dialog_ok_button">Ok</string>
+    <string name="dialog_setting_error_title">Location Settings Error</string>
+    <string name="dialog_setting_error_message">There was an error in the location settings, please check it!</string>
+    <string name="dialog_location_error_title">Error</string>
+    <string name="dialog_location_error_message">There was an error during request actual location data, please check your settings, and try it again!</string>
+    <string name="dialog_network_error_title">Network error</string>
+    <string name="dialog_network_error_message">There was a network error, please check your network settings!</string>
+    <string name="dialog_no_valid_country_code_title">Not Valid Country code!</string>
+    <string name="dialog_no_valid_country_code_message">Your location is not supported by application, please send a message to the author of the application!</string>
 </resources>
