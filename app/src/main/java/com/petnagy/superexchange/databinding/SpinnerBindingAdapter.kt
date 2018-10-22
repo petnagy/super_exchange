@@ -30,3 +30,8 @@ fun setupSelectedValue(spinner: Spinner, value: String?) {
 fun setupSelectionListener(spinner: Spinner, onItemSelectedListener: AdapterView.OnItemSelectedListener) {
     spinner.onItemSelectedListener = onItemSelectedListener
 }
+
+@BindingAdapter("enabled")
+fun setupEnabled(spinner: Spinner, value: Boolean) {
+    spinner.isEnabled = value
+}

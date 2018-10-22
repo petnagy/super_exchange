@@ -34,6 +34,7 @@ class CurrentRateViewModel(private val store: Store<AppState>, private val rateC
     val fineLocationPermissionStatus: MutableLiveData<PermissionStatus> = MutableLiveData<PermissionStatus>().default(PermissionStatus.PERMISSION_DENIED)
     val status: MutableLiveData<LocationStatus> = MutableLiveData<LocationStatus>().default(LocationStatus.STATUS_UNKNOWN)
     val amount: MediatorLiveData<Int> = MediatorLiveData<Int>().default(1)
+    val locationIsReady: MutableLiveData<Boolean> = MutableLiveData<Boolean>().default(false)
 
     override fun newState(state: AppState) {
         loading.value = state.latestRateState.loading
@@ -47,6 +48,7 @@ class CurrentRateViewModel(private val store: Store<AppState>, private val rateC
         } else {
             rates.value = emptyList()
         }
+        locationIsReady.value = status.value == LocationStatus.STATUS_OK
         // If Fragment changed unsubscribe from it.
         if (state.fragmentState != FragmentState.LATEST_RATE) {
             store.unsubscribe(this)
@@ -76,8 +78,12 @@ class CurrentRateViewModel(private val store: Store<AppState>, private val rateC
         }
 
         override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-            val currency = currenciesList[position]
-            store.dispatch(SetBaseCurrencyAction(Currency.valueOf(currency)))
+            if (locationIsReady.value == true) {
+                val currency = currenciesList[position]
+                if (currency != baseCurrency.value) {
+                    store.dispatch(SetBaseCurrencyAction(Currency.valueOf(currency)))
+                }
+            }
         }
     }
 
