@@ -26,7 +26,6 @@ import timber.log.Timber
 import javax.inject.Inject
 import android.support.annotation.StringRes
 
-
 /***
  * Current Rate's Fragment.
  */
@@ -94,12 +93,11 @@ class CurrentRateFragment : DaggerFragment() {
                         dialog.cancel()
                     }
             val dialog = builder.show()
-            view.btn_settings_launch.setOnClickListener {
+            view.btn_settings_launch.setOnClickListener { _ ->
                 launchAskPermission()
                 dialog.dismiss()
             }
         }
-
     }
 
     private fun launchAskPermission() {
