@@ -50,10 +50,12 @@ class HistoryViewModel(private val store: Store<AppState>, private val rateConve
     }
 
     override fun newState(state: AppState) {
-        loading.value = state.historyRateState.loading
-        baseCurrency.value = state.historyRateState.baseCurrency?.name
-        if (state.historyRateState.rates != null && state.historyRateState.baseCurrency != null) {
-            rates.value = rateConverter.convertHistoryItems(state.historyRateState.rates, state.historyRateState.baseCurrency.name)
+        val historyState = state.historyRateState
+        loading.value = historyState.loading
+        baseCurrency.value = historyState.baseCurrency?.name
+        if (historyState.rates != null && historyState.baseCurrency != null) {
+            val convertedHistoryRates = rateConverter.convertHistoryItems(historyState.rates, historyState.baseCurrency.name)
+            rates.value = convertedHistoryRates.map { historyRate -> HistoryItemViewModel(historyRate.date, rateConverter.convertRatesToString(historyRate.rates)) }
         } else {
             rates.value = emptyList()
         }

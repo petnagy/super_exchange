@@ -1,5 +1,6 @@
 package com.petnagy.superexchange.convert
 
+import com.petnagy.superexchange.data.HistoryRate
 import com.petnagy.superexchange.data.LatestRate
 import org.junit.Assert
 import org.junit.Before
@@ -79,5 +80,43 @@ class RateConverterTest {
         Assert.assertEquals(result.rates["HUF"], hufValue)
         val usdValue = BigDecimal(1.1).divide(BigDecimal(320), 6, RoundingMode.CEILING) * BigDecimal(112)
         Assert.assertEquals(result.rates["USD"], usdValue)
+    }
+
+    @Test
+    fun testConvertRatesToStringWithEmptyMap() {
+        // GIVEN
+        // WHEN
+        val result = underTest.convertRatesToString(emptyMap())
+
+        // THEN
+        Assert.assertEquals(result, "")
+    }
+
+    @Test
+    fun testConvertRatesToStringWithNoneEmptyMap() {
+        // GIVEN
+        // WHEN
+        val rates = mapOf("HUF" to BigDecimal("0.123456"), "EUR" to BigDecimal("123.000123"), "USD" to BigDecimal("1"))
+        val result = underTest.convertRatesToString(rates)
+
+        // THEN
+        val resultString = "HUF 0.123456\nEUR 123.000123\nUSD 1"
+        Assert.assertEquals(result, resultString)
+    }
+
+    @Test
+    fun testConvertHistoryItems() {
+        // GIVEN
+        val rate = HistoryRate(true, true, "date1", 1, "EUR", mapOf("HUF" to BigDecimal("320"), "EUR" to BigDecimal("1")))
+        val historyItemList = listOf(rate)
+
+        // WHEN
+        val result = underTest.convertHistoryItems(historyItemList, "HUF")
+
+        // THEN
+        Assert.assertEquals(result.size, 1)
+        Assert.assertEquals(result[0].rates["HUF"], BigDecimal("1.000000"))
+        val convertedEUR = BigDecimal(1).divide(BigDecimal(320), 6, RoundingMode.CEILING)
+        Assert.assertEquals(result[0].rates["EUR"], convertedEUR)
     }
 }

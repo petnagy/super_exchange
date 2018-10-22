@@ -2,8 +2,6 @@ package com.petnagy.superexchange.convert
 
 import com.petnagy.superexchange.data.HistoryRate
 import com.petnagy.superexchange.data.LatestRate
-import com.petnagy.superexchange.pages.fragments.currentrate.viewmodel.CurrentRateItemViewModel
-import com.petnagy.superexchange.pages.fragments.history.viewmodel.HistoryItemViewModel
 import java.math.BigDecimal
 import java.math.RoundingMode
 
@@ -14,17 +12,11 @@ class RateConverter {
 
     companion object {
         private const val SCALE = 6
+        private const val LINE_BREAK = "\n"
     }
 
     fun convertLatestRate(latestRate: LatestRate, baseCurrency: String, amount: Int): LatestRate {
-        val baseRate = latestRate.rates[baseCurrency]
-        val convertedMap: Map<String, BigDecimal> = if (baseRate != null) {
-            latestRate.rates.mapValues { entry ->
-                convertLatestRateItem(entry.value, baseRate, amount)
-            }
-        } else {
-            emptyMap()
-        }
+        val convertedMap: Map<String, BigDecimal> = convertRates(latestRate.rates, baseCurrency, amount)
         return latestRate.copy(rates = convertedMap)
     }
 
@@ -32,22 +24,27 @@ class RateConverter {
         return entry.divide(baseRate, SCALE, RoundingMode.CEILING) * BigDecimal(amount)
     }
 
-    fun convertHistoryItems(rates: List<HistoryRate>, baseCurrency: String): List<HistoryItemViewModel> {
-        return rates.asSequence().map { historyRate -> convertToHistoryItemViewModel(historyRate, baseCurrency) }.toList()
+    fun convertHistoryItems(rates: List<HistoryRate>, baseCurrency: String): List<HistoryRate> {
+        return rates.asSequence().map { historyRate -> convertHistoryRate(historyRate, baseCurrency) }.toList()
     }
 
-    private fun convertToHistoryItemViewModel(historyRate: HistoryRate, baseCurrency: String): HistoryItemViewModel {
-        val date = historyRate.date
-        val baseRate = historyRate.rates[baseCurrency]
-        val convertedMap = if (baseRate != null) {
-            historyRate.rates.mapValues { entry ->
-                entry.value.divide(baseRate, SCALE, RoundingMode.CEILING)
+    private fun convertHistoryRate(historyRate: HistoryRate, baseCurrency: String): HistoryRate {
+        val convertedMap: Map<String, BigDecimal> = convertRates(historyRate.rates, baseCurrency, 1)
+        return historyRate.copy(rates = convertedMap)
+    }
+
+    private fun convertRates(rates: Map<String, BigDecimal>, baseCurrency: String, amount: Int): Map<String, BigDecimal> {
+        val baseRate = rates[baseCurrency]
+        return if (baseRate != null) {
+            rates.mapValues { entry ->
+                convertLatestRateItem(entry.value, baseRate, amount)
             }
         } else {
-            emptyMap<String, BigDecimal>()
+            emptyMap()
         }
-        val convertedMapAsString = convertedMap.map { entry -> entry.key + " " + entry.value.toString() }
-                .joinToString("\n")
-        return HistoryItemViewModel(date, convertedMapAsString)
+    }
+
+    fun convertRatesToString(rates: Map<String, BigDecimal>): String {
+        return rates.map { entry -> "${entry.key} ${entry.value}" }.joinToString(separator = LINE_BREAK)
     }
 }
