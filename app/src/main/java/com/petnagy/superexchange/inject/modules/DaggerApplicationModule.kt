@@ -22,6 +22,7 @@ import com.petnagy.superexchange.redux.state.AppState
 import com.petnagy.superexchange.redux.state.HistoryRateState
 import com.petnagy.superexchange.redux.state.LatestRateState
 import com.petnagy.superexchange.repository.HistoryRateCompositeRepository
+import com.petnagy.superexchange.repository.HistoryRateListRepository
 import com.petnagy.superexchange.repository.HistoryRateNetworkRepository
 import com.petnagy.superexchange.repository.HistoryRateRoomRepository
 import com.petnagy.superexchange.repository.LatestRateCompositeRepository
@@ -75,7 +76,11 @@ class DaggerApplicationModule {
 
     @Provides
     @Singleton
-    fun provideHistoryMiddleware(historyRateComposeRepository: HistoryRateCompositeRepository): HistoryMiddleware = HistoryMiddleware(historyRateComposeRepository)
+    fun provideHistoryMiddleware(historyRateListRepository: HistoryRateListRepository): HistoryMiddleware = HistoryMiddleware(historyRateListRepository)
+
+    @Provides
+    @Singleton
+    internal fun provideHistoryRateListRepository(historyRateCompositeRepository: HistoryRateCompositeRepository) = HistoryRateListRepository(historyRateCompositeRepository)
 
     @Provides
     internal fun provideRxLocation(@AppContext context: Context) = RxLocation(context)

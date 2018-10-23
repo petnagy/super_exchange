@@ -15,7 +15,7 @@ class BaseCurrencyChangedAction(val selectedCurrency: Currency) : HistoryAction(
 open class HistoryAction : Action {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
-        if (other !is LastRateAction) return false
+        if (other !is HistoryAction) return false
         return true
     }
 

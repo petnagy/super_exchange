@@ -12,7 +12,9 @@ import com.petnagy.superexchange.redux.action.LoadHistoryAction
 import com.petnagy.superexchange.redux.action.SetHistoryListAction
 import com.petnagy.superexchange.redux.state.AppState
 import com.petnagy.superexchange.repository.HistoryRateSpecification
+import com.petnagy.superexchange.repository.NoSpecification
 import com.petnagy.superexchange.repository.Repository
+import com.petnagy.superexchange.repository.Specification
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -20,12 +22,7 @@ import timber.log.Timber
 import java.text.SimpleDateFormat
 import java.util.Calendar
 
-class HistoryMiddleware(private val historyRateRepo: Repository<HistoryRate>) : Middleware<AppState> {
-
-    companion object {
-        private const val DAY_OF_START = 1
-        private const val DAYS_IN_PAST = 7
-    }
+class HistoryMiddleware(private val historyRateRepo: Repository<List<HistoryRate>>) : Middleware<AppState> {
 
     override fun invoke(store: Store<AppState>, action: Action, next: DispatchFunction) {
         when (action) {
@@ -36,10 +33,7 @@ class HistoryMiddleware(private val historyRateRepo: Repository<HistoryRate>) : 
 
     @SuppressLint("CheckResult")
     private fun loadFromNet(store: Store<AppState>) {
-        Observable.range(DAY_OF_START, DAYS_IN_PAST)
-                .map { day -> createDate(day) }
-                .flatMap { date -> historyRateRepo.load(HistoryRateSpecification(Currency.values().joinToString(","), "EUR", date)).toObservable() }
-                .toList()
+        historyRateRepo.load(NoSpecification())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
@@ -56,11 +50,5 @@ class HistoryMiddleware(private val historyRateRepo: Repository<HistoryRate>) : 
     private fun handleError(store: Store<AppState>, error: Throwable) {
         Timber.e(error, "Something went wrong in load HistoryRate")
         store.dispatch(HistoryErrorAction())
-    }
-
-    private fun createDate(day: Int): String {
-        val calendar = Calendar.getInstance()
-        calendar.add(Calendar.DAY_OF_YEAR, day * -1)
-        return SimpleDateFormat("yyyy-MM-dd").format(calendar.time)
     }
 }
