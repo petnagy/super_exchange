@@ -9,8 +9,8 @@ import timber.log.Timber
  * Composite repository, it is using network and room repository.
  */
 class LatestRateCompositeRepository(
-        private val networkRepo: LatestRateNetworkRepository,
-        private val roomRepo: LatestRateRoomRepository
+    private val networkRepo: LatestRateNetworkRepository,
+    private val roomRepo: LatestRateRoomRepository
 ) : Repository<LatestRate> {
 
     override fun load(specification: Specification): Maybe<LatestRate> {

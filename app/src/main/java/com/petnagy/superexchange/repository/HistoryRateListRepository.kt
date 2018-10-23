@@ -5,15 +5,13 @@ import com.petnagy.superexchange.data.HistoryRate
 import io.reactivex.Completable
 import io.reactivex.Maybe
 import io.reactivex.Observable
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Calendar
 
 /***
  * This repository will provide an Observable which will call HistoryRateCompositeRepository
  */
-class HistoryRateListRepository(private val repository: Repository<HistoryRate>): Repository<List<HistoryRate>> {
+class HistoryRateListRepository(private val repository: Repository<HistoryRate>) : Repository<List<HistoryRate>> {
 
     companion object {
         private const val DAY_OF_START = 1
@@ -38,5 +36,4 @@ class HistoryRateListRepository(private val repository: Repository<HistoryRate>)
         calendar.add(Calendar.DAY_OF_YEAR, day * -1)
         return SimpleDateFormat("yyyy-MM-dd").format(calendar.time)
     }
-
 }

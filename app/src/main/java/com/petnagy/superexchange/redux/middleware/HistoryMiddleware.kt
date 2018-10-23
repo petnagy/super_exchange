@@ -5,22 +5,16 @@ import com.petnagy.koredux.Action
 import com.petnagy.koredux.DispatchFunction
 import com.petnagy.koredux.Middleware
 import com.petnagy.koredux.Store
-import com.petnagy.superexchange.data.Currency
 import com.petnagy.superexchange.data.HistoryRate
 import com.petnagy.superexchange.redux.action.HistoryErrorAction
 import com.petnagy.superexchange.redux.action.LoadHistoryAction
 import com.petnagy.superexchange.redux.action.SetHistoryListAction
 import com.petnagy.superexchange.redux.state.AppState
-import com.petnagy.superexchange.repository.HistoryRateSpecification
 import com.petnagy.superexchange.repository.NoSpecification
 import com.petnagy.superexchange.repository.Repository
-import com.petnagy.superexchange.repository.Specification
-import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import timber.log.Timber
-import java.text.SimpleDateFormat
-import java.util.Calendar
 
 class HistoryMiddleware(private val historyRateRepo: Repository<List<HistoryRate>>) : Middleware<AppState> {
 

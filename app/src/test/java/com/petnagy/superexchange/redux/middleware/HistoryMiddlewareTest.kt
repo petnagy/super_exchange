@@ -71,5 +71,4 @@ class HistoryMiddlewareTest {
         // THEN
         Mockito.verify(mockedStore).dispatch(SetHistoryListAction(listOfResult))
     }
-
 }
