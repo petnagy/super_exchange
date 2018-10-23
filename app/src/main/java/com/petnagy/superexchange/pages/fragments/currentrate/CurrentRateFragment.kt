@@ -43,21 +43,28 @@ class CurrentRateFragment : DaggerFragment() {
         super.onCreate(savedInstanceState)
         viewModel = ViewModelProviders.of(this, viewModelFactory)[CurrentRateViewModel::class.java]
         lifecycle.addObserver(viewModel)
-        viewModel.status.observe(this, Observer<LocationStatus> { locationStatus ->
-            Timber.d("Status changed: ${locationStatus?.name}")
-            when (locationStatus) {
-                LocationStatus.PERMISSION_DENIED -> askPermission()
-                LocationStatus.PERMISSION_NEED -> showPermissionNeedDialog()
-                LocationStatus.LOCATION_ERROR -> showLocationErrorDialog()
-                LocationStatus.PLAY_SERVICE_ERROR -> showPlayServiceErrorDialog()
-                LocationStatus.SETTING_ERROR -> showSettingsErrorDialog()
-                LocationStatus.NETWORK_ERROR -> showNetworkErrorDialog()
-                LocationStatus.NOT_VALID_COUNTRY_CODE -> showNotValidCountryCodeDialog()
-                else -> {
-                    // DO nothing
-                }
+        viewModel.status.observe(this, stateObserver)
+    }
+
+    private val stateObserver = Observer<LocationStatus> { locationStatus ->
+        Timber.d("Status changed: ${locationStatus?.name}")
+        when (locationStatus) {
+            LocationStatus.PERMISSION_DENIED -> askPermission()
+            LocationStatus.PERMISSION_NEED -> showPermissionNeedDialog()
+            LocationStatus.LOCATION_ERROR -> showLocationErrorDialog()
+            LocationStatus.PLAY_SERVICE_ERROR -> showPlayServiceErrorDialog()
+            LocationStatus.SETTING_ERROR -> showSettingsErrorDialog()
+            LocationStatus.NETWORK_ERROR -> showNetworkErrorDialog()
+            LocationStatus.NOT_VALID_COUNTRY_CODE -> showNotValidCountryCodeDialog()
+            else -> {
+                // DO nothing
             }
-        })
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        viewModel.status.removeObserver(stateObserver)
     }
 
     override fun onStart() {
