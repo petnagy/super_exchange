@@ -56,9 +56,9 @@ class AppReducer : Reducer<AppState> {
                     state = state.copy(baseCurrency = baseCurrency)
                 }
             }
-            is LoadHistoryAction -> state = state.copy(loading = true, rates = null)
+            is LoadHistoryAction -> state = state.copy(loading = true, rates = emptyList())
             is SetHistoryListAction -> state = state.copy(loading = false, rates = action.historyList)
-            is HistoryErrorAction -> state = state.copy(loading = false, rates = null)
+            is HistoryErrorAction -> state = state.copy(loading = false, rates = emptyList())
             is BaseCurrencyChangedAction -> state = state.copy(baseCurrency = action.selectedCurrency)
         }
         return state

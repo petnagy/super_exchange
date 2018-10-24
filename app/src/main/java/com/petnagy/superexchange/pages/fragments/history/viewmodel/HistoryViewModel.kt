@@ -53,7 +53,7 @@ class HistoryViewModel(private val store: Store<AppState>, private val rateConve
         val historyState = state.historyRateState
         loading.value = historyState.loading
         baseCurrency.value = historyState.baseCurrency?.name
-        if (historyState.rates != null && historyState.baseCurrency != null) {
+        if (historyState.rates.isNotEmpty() && historyState.baseCurrency != null) {
             val convertedHistoryRates = rateConverter.convertHistoryItems(historyState.rates, historyState.baseCurrency.name)
             rates.value = convertedHistoryRates.map { historyRate -> HistoryItemViewModel(historyRate.date, rateConverter.convertRatesToString(historyRate.rates)) }
         } else {
