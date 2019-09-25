@@ -8,3 +8,5 @@ And you have to add this API key to your gradle.properties file.
 
 FixerIoApi = "$YOUR_API_KEY"
 
+Accourding https://medium.com/code-better/hiding-api-keys-from-your-android-repository-b23f5598b906 article.
+
